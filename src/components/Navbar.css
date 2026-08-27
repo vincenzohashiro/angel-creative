@@ -1,0 +1,135 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(18, 17, 16, 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.18s ease;
+}
+
+.navbar-brand:hover {
+  opacity: 0.75;
+}
+
+.navbar-brand img {
+  height: 30px;
+  width: auto;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links a {
+  display: inline-block;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+  padding: 6px 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.navbar-links a:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  width: 20px;
+  height: 14px;
+  position: relative;
+  cursor: pointer;
+}
+
+.navbar-toggle span,
+.navbar-toggle::before,
+.navbar-toggle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: var(--fg);
+}
+
+.navbar-toggle span {
+  top: 6px;
+}
+
+.navbar-toggle::before {
+  top: 0;
+}
+
+.navbar-toggle::after {
+  bottom: 0;
+}
+
+@media (max-width: 760px) {
+  .navbar-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+
+  .navbar-links.is-open {
+    max-height: 320px;
+  }
+
+  .navbar-links li {
+    width: 100%;
+  }
+
+  .navbar-links a {
+    display: block;
+    width: 100%;
+    padding: 18px clamp(20px, 5vw, 44px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  .navbar-cta {
+    display: none;
+  }
+}
