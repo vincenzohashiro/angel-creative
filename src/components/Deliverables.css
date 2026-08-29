@@ -1,3 +1,8 @@
+#deliverables .wrap {
+  position: relative;
+  z-index: 1;
+}
+
 .deliver-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -9,19 +14,13 @@
   text-align: center;
 }
 
-#deliverables .section-head,
 #deliverables .deliver-card {
   opacity: 0;
   transform: translateY(24px);
 }
 
-#deliverables.is-visible .section-head,
 #deliverables.is-visible .deliver-card {
   animation: fade-up 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-#deliverables.is-visible .section-head {
-  animation-delay: 0s;
 }
 
 #deliverables.is-visible .deliver-card:nth-child(1) {

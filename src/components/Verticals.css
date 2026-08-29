@@ -1,50 +1,46 @@
 .verticals {
-  background: var(--bg-alt);
+  border-top: 1px solid var(--line);
 }
 
-.verticals .section-head {
-  opacity: 0;
-  transform: translateY(24px);
-}
-
-.verticals.is-visible .section-head {
-  animation: fade-up 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes clip-wipe {
+@keyframes fade-right {
   from {
-    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+    transform: translateX(24px);
   }
   to {
-    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-.verticals .vertical-group {
-  clip-path: inset(0 100% 0 0);
+.verticals .vertical-panel {
+  opacity: 0;
+  transform: translateX(24px);
 }
 
-.verticals.is-visible .vertical-group {
-  animation-name: clip-wipe;
-  animation-duration: 2s;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
+.verticals.is-visible .vertical-panel {
+  animation: fade-right 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.2s;
 }
 
-.verticals.is-visible .vertical-group:nth-child(1) {
-  animation-delay: 0.5s;
+@keyframes fade-left {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.verticals.is-visible .vertical-group:nth-child(2) {
-  animation-delay: 0.7s;
+.vertical-row {
+  opacity: 0;
+  transform: translateX(-24px);
 }
 
-.verticals.is-visible .vertical-group:nth-child(3) {
-  animation-delay: 1s;
-}
-
-.verticals.is-visible .vertical-group:nth-child(4) {
-  animation-delay: 1.5s;
+.verticals.is-visible .vertical-row {
+  animation: fade-left 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .verticals .section-head h2 {
@@ -60,117 +56,158 @@
   text-align: center;
 }
 
-.verticals-groups {
+.verticals-columns {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 56px;
 }
 
-.vertical-group {
-  padding: 28px 24px;
-  border-right: 1px solid var(--line);
+.vertical-list {
+  display: flex;
+  flex-direction: column;
 }
 
-.vertical-group:last-child {
-  border-right: none;
-}
-
-.vertical-group-head {
+.vertical-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 20px;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-left: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.vertical-group-name {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--fg-soft);
+.vertical-row:hover {
+  background: rgba(243, 241, 237, 0.03);
 }
 
-.vertical-group-count {
+.vertical-row.is-active {
+  border-left-color: var(--red);
+  background: rgba(243, 241, 237, 0.03);
+}
+
+.vertical-row-num {
+  width: 22px;
+  flex: none;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 15px;
+  font-size: 14px;
+  color: var(--fg-dim);
+}
+
+.vertical-row.is-active .vertical-row-num {
   color: var(--red);
 }
 
-.vertical-group-icon {
+.vertical-row-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--fg-soft);
+  transition: color 0.2s ease;
+}
+
+.vertical-row.is-active .vertical-row-name {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.vertical-row-arrow {
+  color: var(--red);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.vertical-row.is-active .vertical-row-arrow,
+.vertical-row:hover .vertical-row-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.vertical-panel {
+  padding: 40px 36px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.vertical-panel-tag {
+  margin: 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.vertical-panel-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  margin-bottom: 18px;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 22px;
   border: 1px solid var(--red);
-  border-radius: 8px;
-  background: rgba(232, 35, 44, 0.08);
+  border-radius: 10px;
+  background: rgba(226, 34, 42, 0.08);
   color: var(--red);
 }
 
-.vertical-group-icon svg {
-  width: 18px;
-  height: 18px;
+.vertical-panel-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
-.vertical-group-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.vertical-group-list li {
-  border-bottom: 1px solid var(--line);
-}
-
-.vertical-group-list li:last-child {
-  border-bottom: none;
-}
-
-.vertical-group-list a {
-  display: block;
-  padding: 12px 0;
-  font-size: 15px;
-  font-weight: 500;
+.vertical-panel-title {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 30px;
+  font-weight: 400;
   color: var(--fg);
-  text-decoration: none;
-  transition: color 0.15s ease;
 }
 
-.vertical-group-list a:hover {
-  color: var(--red);
+.vertical-panel-desc {
+  margin: 0 0 28px;
+  color: var(--fg-soft);
+  font-size: 14.5px;
+  line-height: 1.6;
 }
 
-@media (max-width: 900px) {
-  .verticals-groups {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .vertical-group:nth-child(2n) {
-    border-right: none;
-  }
-
-  .vertical-group:nth-child(n + 3) {
-    border-top: 1px solid var(--line);
-  }
+.vertical-panel-stats {
+  display: flex;
+  gap: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
 }
 
-@media (max-width: 560px) {
-  .verticals-groups {
+.vertical-panel-stat-label {
+  margin: 0 0 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.vertical-panel-stat-value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+@media (max-width: 860px) {
+  .verticals-columns {
     grid-template-columns: 1fr;
-  }
-
-  .vertical-group {
-    border-right: none;
-    border-top: 1px solid var(--line);
-  }
-
-  .vertical-group:first-child {
-    border-top: none;
+    gap: 32px;
   }
 }

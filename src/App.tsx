@@ -7,6 +7,7 @@ import Process from './components/Process'
 import Results from './components/Results'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import GradientOrbs from './components/GradientOrbs'
 
 function App() {
   useEffect(() => {
@@ -30,11 +31,14 @@ function App() {
     <>
       <Navbar />
       <main id="top">
-        <Hero />
-        <Deliverables />
-        <Verticals />
-        <Process />
-        <Results />
+        <div className="ambient-bg">
+          <GradientOrbs />
+          <Hero />
+          <Deliverables />
+          <Verticals />
+          <Process />
+          <Results />
+        </div>
         <Contact />
       </main>
       <Footer />

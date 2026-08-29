@@ -3,17 +3,17 @@ import useReveal from '../hooks/useReveal'
 import './Results.css'
 
 const results = [
-  { tag: 'MVA · Pay Per Call', title: 'Inbound Call Campaign Scale-Up', status: 'Live' },
-  { tag: 'Debt Relief · Leads', title: 'Qualified Lead Volume Increase', status: 'Live' },
-  { tag: 'Home Warranty · Traffic', title: 'Co-Reg Funnel Expansion', status: 'Live' },
-  { tag: 'Sweepstakes · Leads', title: 'Multi-Channel Lead Campaign', status: 'Live' },
+  { tag: 'MVA · Pay Per Call', title: 'Inbound Call Campaign Scale-Up' },
+  { tag: 'Debt Relief · Leads', title: 'Qualified Lead Volume Increase' },
+  { tag: 'Home Warranty · Traffic', title: 'Co-Reg Funnel Expansion' },
+  { tag: 'Sweepstakes · Leads', title: 'Multi-Channel Lead Campaign' },
 ]
 
 function Results() {
   const { ref, isVisible } = useReveal<HTMLElement>()
 
   return (
-    <section id="work" ref={ref} className={isVisible ? 'reveal is-visible' : 'reveal'}>
+    <section id="work" ref={ref} className={isVisible ? 'is-visible' : undefined}>
       <div className="wrap">
         <SectionHead
           eyebrow="Results"
@@ -27,13 +27,7 @@ function Results() {
                 <span className="result-tag">{item.tag}</span>
                 <span className="result-title">{item.title}</span>
               </span>
-              <span className="result-right">
-                <span className="result-status">
-                  <span className="result-dot" />
-                  {item.status}
-                </span>
-                <span className="result-arrow">→</span>
-              </span>
+              <span className="result-arrow">→</span>
             </a>
           ))}
         </div>

@@ -89,6 +89,11 @@ section {
   padding-bottom: var(--pad);
 }
 
+.ambient-bg {
+  position: relative;
+  overflow: hidden;
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;

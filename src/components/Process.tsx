@@ -1,5 +1,5 @@
-import { Fragment } from 'react'
 import SectionHead from './SectionHead'
+import InfinityPath from './InfinityPath'
 import useReveal from '../hooks/useReveal'
 import './Process.css'
 
@@ -26,7 +26,8 @@ function Process() {
   const { ref, isVisible } = useReveal<HTMLElement>()
 
   return (
-    <section id="process" ref={ref} className={isVisible ? 'reveal is-visible' : 'reveal'}>
+    <section id="process" ref={ref} className={isVisible ? 'is-visible' : undefined}>
+      <InfinityPath />
       <div className="wrap">
         <SectionHead
           eyebrow="How we work"
@@ -34,21 +35,14 @@ function Process() {
           note="Performance marketing isn't a single deliverable. It's a cycle we run continuously."
         />
         <div className="process-track">
-          {steps.map((step, index) => (
-            <Fragment key={step.number}>
-              <div className="process-step">
-                <div className="process-node">
-                  <span>{step.number}</span>
-                </div>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
+          {steps.map((step) => (
+            <div className="process-step" key={step.number}>
+              <div className="process-node">
+                <span>{step.number}</span>
               </div>
-              {index < steps.length - 1 && (
-                <span className="process-arrow" aria-hidden="true">
-                  →
-                </span>
-              )}
-            </Fragment>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </div>
           ))}
         </div>
       </div>

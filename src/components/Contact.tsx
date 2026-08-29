@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import Eyebrow from './Eyebrow'
 import useReveal from '../hooks/useReveal'
+import contactBg from '../assets/contact-bg.jpg'
 import './Contact.css'
 
 const verticalOptions = [
@@ -47,6 +48,9 @@ function Contact() {
       id="contact"
       ref={ref}
     >
+      <div className="contact-bg" aria-hidden="true">
+        <img src={contactBg} alt="" className="contact-bg-image" />
+      </div>
       <div className="wrap contact-grid">
         <div>
           <Eyebrow>Get in touch</Eyebrow>
@@ -55,8 +59,8 @@ function Contact() {
             Tell us about the offer: vertical, payout, and intake criteria, and we&rsquo;ll follow
             up within a couple of business days.
           </p>
-          <a href="mailto:hello@angelcreative.co" className="contact-email">
-            hello@angelcreative.co
+          <a href="mailto:ads@angelcreativeads.com" className="contact-email">
+            ads@angelcreativeads.com
             <ArrowIcon />
           </a>
 

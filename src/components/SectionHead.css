@@ -37,3 +37,28 @@
   font-size: 14.5px;
   text-align: justify;
 }
+
+.section-head-eyebrow,
+.section-head h2,
+.section-note {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.is-visible .section-head-eyebrow,
+.is-visible .section-head h2,
+.is-visible .section-note {
+  animation: fade-up 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.is-visible .section-head-eyebrow {
+  animation-delay: 0s;
+}
+
+.is-visible .section-head h2 {
+  animation-delay: 0.2s;
+}
+
+.is-visible .section-note {
+  animation-delay: 0.4s;
+}
