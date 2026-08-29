@@ -35,16 +35,6 @@
   border-color: var(--red);
 }
 
-.btn-text.on-dark {
-  color: var(--fg);
-  border-color: rgba(243, 241, 237, 0.4);
-}
-
-.btn-text.on-dark:hover {
-  color: var(--red);
-  border-color: var(--red);
-}
-
 .btn-outline {
   display: inline-flex;
   border: 1px solid var(--fg);

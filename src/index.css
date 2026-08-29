@@ -1,12 +1,12 @@
 :root {
-  --bg: #121110;
+  --bg: #0c0c0d;
   --bg-alt: #1a1817;
   --bg-deep: #0a0908;
   --fg: #f3f1ed;
   --fg-soft: #9c978f;
   --fg-dim: #726d65;
   --line: #2c2926;
-  --red: #e8232c;
+  --red: #e2222a;
   --red-deep: #c81b23;
 
   --wrap: 1140px;
@@ -24,14 +24,7 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   * {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
@@ -89,4 +82,29 @@ em {
   margin: 0 auto;
   padding-left: clamp(20px, 5vw, 44px);
   padding-right: clamp(20px, 5vw, 44px);
+}
+
+section {
+  padding-top: var(--pad);
+  padding-bottom: var(--pad);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.reveal.is-visible {
+  animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

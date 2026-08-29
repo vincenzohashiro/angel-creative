@@ -1,0 +1,15 @@
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.18s ease;
+}
+
+.brand:hover {
+  opacity: 0.75;
+}
+
+.brand img {
+  height: 30px;
+  width: auto;
+}
