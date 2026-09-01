@@ -3,11 +3,10 @@ import './Eyebrow.css'
 
 type EyebrowProps = {
   children: ReactNode
-  tone?: 'dark'
 }
 
-function Eyebrow({ children, tone }: EyebrowProps) {
-  return <p className={tone === 'dark' ? 'eyebrow on-dark' : 'eyebrow'}>{children}</p>
+function Eyebrow({ children }: EyebrowProps) {
+  return <p className="eyebrow">{children}</p>
 }
 
 export default Eyebrow

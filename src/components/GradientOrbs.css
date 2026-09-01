@@ -1,0 +1,80 @@
+.gradient-orbs {
+  --ember: 226, 34, 42;
+  --ember-deep: 92, 30, 34;
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+}
+
+.gradient-orb-a {
+  top: -130px;
+  left: -140px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(var(--ember), 0.45), rgba(var(--ember), 0) 70%);
+  animation: orb-drift-a 20s ease-in-out infinite;
+}
+
+.gradient-orb-b {
+  right: -120px;
+  bottom: -150px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(var(--ember-deep), 0.55), rgba(var(--ember-deep), 0) 70%);
+  animation: orb-drift-b 18s ease-in-out infinite;
+}
+
+.gradient-orb-c {
+  top: 28%;
+  right: 10%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(var(--ember), 0.3), rgba(var(--ember), 0) 70%);
+  animation: orb-drift-c 22s ease-in-out infinite;
+}
+
+@keyframes orb-drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(34px, 22px) scale(1.08);
+  }
+}
+
+@keyframes orb-drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-26px, -18px) scale(0.94);
+  }
+}
+
+@keyframes orb-drift-c {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-20px, 26px) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-orb {
+    animation: none;
+  }
+}

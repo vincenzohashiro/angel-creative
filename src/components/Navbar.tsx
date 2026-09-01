@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import logo from '../assets/angel-creative-logo.png'
+import Brand from './Brand'
 import Button from './Button'
 import './Navbar.css'
 
@@ -17,9 +17,7 @@ function Navbar() {
   return (
     <header className="navbar">
       <nav className="navbar-inner wrap">
-        <a href="#top" className="navbar-brand">
-          <img src={logo} alt="Angel Creative" />
-        </a>
+        <Brand href="#top" />
 
         <button
           type="button"

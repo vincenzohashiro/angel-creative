@@ -1,3 +1,14 @@
+@keyframes navbar-fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .navbar {
   position: sticky;
   top: 0;
@@ -5,6 +16,7 @@
   background: rgba(18, 17, 16, 0.88);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
+  animation: navbar-fade-down 2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .navbar-inner {
@@ -14,22 +26,6 @@
   padding-top: 20px;
   padding-bottom: 20px;
   position: relative;
-}
-
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  transition: opacity 0.18s ease;
-}
-
-.navbar-brand:hover {
-  opacity: 0.75;
-}
-
-.navbar-brand img {
-  height: 30px;
-  width: auto;
 }
 
 .navbar-links {

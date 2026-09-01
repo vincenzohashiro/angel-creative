@@ -4,15 +4,12 @@ import './Button.css'
 type ButtonProps = {
   href: string
   variant: 'solid' | 'text' | 'outline'
-  tone?: 'dark'
   children: ReactNode
 }
 
-function Button({ href, variant, tone, children }: ButtonProps) {
-  const className = tone === 'dark' ? `btn-${variant} on-dark` : `btn-${variant}`
-
+function Button({ href, variant, children }: ButtonProps) {
   return (
-    <a href={href} className={className}>
+    <a href={href} className={`btn-${variant}`}>
       {children}
     </a>
   )

@@ -1,27 +1,84 @@
 .hero {
   padding-top: clamp(72px, 11vw, 128px);
   padding-bottom: clamp(64px, 9vw, 108px);
+  text-align: center;
 }
 
 .hero-inner {
-  max-width: var(--prose);
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto 24px;
+  padding: 8px 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+}
+
+.hero-badge-dot {
+  color: var(--red);
+  font-size: 8px;
 }
 
 .hero h1 {
-  font-size: clamp(38px, 5.6vw, 60px);
+  font-size: clamp(38px, 6.4vw, 68px);
   line-height: 1.12;
 }
 
 .hero-sub {
   max-width: 520px;
+  margin: 24px auto 38px;
   color: var(--fg-soft);
   font-size: 17px;
-  margin: 26px 0 38px;
 }
 
 .hero-cta {
   display: flex;
   align-items: center;
-  gap: 28px;
+  justify-content: center;
+  gap: 16px;
   flex-wrap: wrap;
+}
+
+.hero-badge,
+.hero h1,
+.hero-sub,
+.hero-cta {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.hero.is-visible .hero-badge,
+.hero.is-visible h1,
+.hero.is-visible .hero-sub,
+.hero.is-visible .hero-cta {
+  animation: fade-up 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero.is-visible .hero-badge {
+  animation-delay: 0s;
+}
+
+.hero.is-visible h1 {
+  animation-delay: 0.25s;
+}
+
+.hero.is-visible .hero-sub {
+  animation-delay: 0.5s;
+}
+
+.hero.is-visible .hero-cta {
+  animation-delay: 0.75s;
 }

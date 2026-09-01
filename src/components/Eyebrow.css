@@ -18,7 +18,3 @@
   background: var(--red);
   display: inline-block;
 }
-
-.eyebrow.on-dark {
-  color: var(--fg-soft);
-}
