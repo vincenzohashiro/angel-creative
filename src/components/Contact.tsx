@@ -90,8 +90,8 @@ function Contact() {
           <Eyebrow>Get in touch</Eyebrow>
           <h2>Publisher Partners: Book a meeting on my calendar</h2>
           <p className="contact-sub">
-            Need Leads, Calls, or Traffic? Tell us about the offer and we will follow up in 24
-            hours.
+            Need Leads, Calls, or Traffic? Tell us about the offer and we will follow up within
+            24 hours.
           </p>
           <a href="mailto:ads@angelcreativeads.com" className="contact-email">
             ads@angelcreativeads.com
