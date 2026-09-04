@@ -79,20 +79,20 @@ const verticals = [
     buyers: 'Warranty Providers',
   },
   {
-    name: 'Legal',
+    name: 'Mass Tort & Class Action',
     category: 'Legal & Financial',
     icon: scaleIcon,
     description:
-      'Qualified case leads across personal injury and mass tort, screened and routed to intake teams in real time.',
+      'Qualified case leads across mass tort and class action matters, screened and routed to intake teams in real time.',
     format: 'Calls & Web Leads',
     buyers: 'Law Firms',
   },
   {
-    name: 'MVA',
+    name: 'Personal Injury',
     category: 'Legal & Financial',
     icon: scaleIcon,
     description:
-      'Pay-per-call leads for motor vehicle accident cases, screened for qualification before reaching your intake line.',
+      'Pay-per-call leads for personal injury cases, including motor vehicle accidents, screened for qualification before reaching your intake line.',
     format: 'Pay Per Call',
     buyers: 'Law Firms',
   },
@@ -113,6 +113,33 @@ const verticals = [
       'Qualified leads from consumers carrying unsecured debt, screened for eligibility before handoff to your team.',
     format: 'Calls & Web Leads',
     buyers: 'Debt Relief Firms',
+  },
+  {
+    name: 'Debt Settlement & Relief',
+    category: 'Legal & Financial',
+    icon: scaleIcon,
+    description:
+      'Qualified leads from consumers seeking debt settlement or relief programs, screened for eligibility before handoff to your team.',
+    format: 'Calls & Web Leads',
+    buyers: 'Debt Relief Firms',
+  },
+  {
+    name: 'Consumer Credit and Personal Loans',
+    category: 'Legal & Financial',
+    icon: scaleIcon,
+    description:
+      'Qualified leads from consumers seeking personal loans or credit solutions, screened by need and matched to eligible lenders.',
+    format: 'Web Leads',
+    buyers: 'Lenders',
+  },
+  {
+    name: 'Mortgage Lending',
+    category: 'Home',
+    icon: homeIcon,
+    description:
+      'Qualified leads from homeowners and buyers seeking mortgage refinancing or new home loans, matched to lenders by loan type and region.',
+    format: 'Web Leads',
+    buyers: 'Mortgage Lenders',
   },
   {
     name: 'Ecommerce',
@@ -150,7 +177,7 @@ function Verticals() {
           eyebrow="Verticals"
           heading={
             <>
-              Eleven verticals,
+              Fourteen verticals,
               <br />
               <em>grouped, not scattered.</em>
             </>

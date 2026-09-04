@@ -10,17 +10,20 @@ const verticalOptions = [
   'Home Insurance',
   'Home Services',
   'Home Warranty',
-  'Legal',
-  'MVA',
+  'Mortgage Lending',
+  'Mass Tort & Class Action',
+  'Personal Injury',
   'Ecommerce',
   'Sweepstakes',
   'Financial Assistance',
+  'Consumer Credit and Personal Loans',
   'Debt',
+  'Debt Settlement & Relief',
   'Other',
 ]
 
 const stats = [
-  { number: '11', label: 'Verticals covered' },
+  { number: '14', label: 'Verticals covered' },
   { number: '48h', label: 'Avg. response' },
   { number: '100%', label: 'In-house team' },
 ]
@@ -85,10 +88,10 @@ function Contact() {
       <div className="wrap contact-grid">
         <div>
           <Eyebrow>Get in touch</Eyebrow>
-          <h2>Have an offer that needs leads, traffic, or calls?</h2>
+          <h2>Publisher Partners: Book a meeting on my calendar</h2>
           <p className="contact-sub">
-            Tell us about the offer: vertical, payout, and intake criteria, and we&rsquo;ll follow
-            up within a couple of business days.
+            Need Leads, Calls, or Traffic? Tell us about the offer and we will follow up in 24
+            hours.
           </p>
           <a href="mailto:ads@angelcreativeads.com" className="contact-email">
             ads@angelcreativeads.com
