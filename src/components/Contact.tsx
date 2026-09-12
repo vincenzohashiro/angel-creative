@@ -17,13 +17,12 @@ const verticalOptions = [
   'Sweepstakes',
   'Financial Assistance',
   'Consumer Credit and Personal Loans',
-  'Debt',
   'Debt Settlement & Relief',
   'Other',
 ]
 
 const stats = [
-  { number: '14', label: 'Verticals covered' },
+  { number: '13', label: 'Verticals covered' },
   { number: '48h', label: 'Avg. response' },
   { number: '100%', label: 'In-house team' },
 ]

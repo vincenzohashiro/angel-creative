@@ -59,13 +59,6 @@ const dollarIcon = (
   </svg>
 )
 
-const cardIcon = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-    <rect x="3" y="6" width="18" height="12" rx="2" />
-    <path d="M3 10h18" />
-  </svg>
-)
-
 const handshakeIcon = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
     <path
@@ -169,13 +162,6 @@ const verticals = [
     icon: dollarIcon,
     description:
       'Leads from consumers seeking financial relief programs, qualified by need and matched to eligible providers.',
-  },
-  {
-    name: 'Debt',
-    category: 'Legal & Financial',
-    icon: cardIcon,
-    description:
-      'Qualified leads from consumers carrying unsecured debt, screened for eligibility before handoff to your team.',
   },
   {
     name: 'Debt Settlement & Relief',
@@ -351,7 +337,7 @@ function Verticals() {
           eyebrow="Verticals"
           heading={
             <>
-              Fourteen verticals,
+              Thirteen verticals,
               <br />
               <em>grouped, not scattered.</em>
             </>
