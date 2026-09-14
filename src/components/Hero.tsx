@@ -1,5 +1,6 @@
 import Button from './Button'
 import useReveal from '../hooks/useReveal'
+import { PUBLISHER_SIGNUP_URL } from '../constants'
 import './Hero.css'
 
 function Hero() {
@@ -25,7 +26,7 @@ function Hero() {
           <Button href="#verticals" variant="solid">
             View verticals
           </Button>
-          <Button href="#contact" variant="outline">
+          <Button href={PUBLISHER_SIGNUP_URL} variant="outline">
             Get in touch
           </Button>
         </div>

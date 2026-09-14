@@ -1,5 +1,6 @@
 import SectionHead from './SectionHead'
 import useReveal from '../hooks/useReveal'
+import { PUBLISHER_SIGNUP_URL } from '../constants'
 import './Results.css'
 
 const results = [
@@ -22,7 +23,7 @@ function Results() {
         />
         <div className="results-list">
           {results.map((item) => (
-            <a className="result-row" href="#contact" key={item.title}>
+            <a className="result-row" href={PUBLISHER_SIGNUP_URL} key={item.title}>
               <span className="result-left">
                 <span className="result-tag">{item.tag}</span>
                 <span className="result-title">{item.title}</span>
@@ -33,7 +34,7 @@ function Results() {
         </div>
         <p className="results-note">
           Want specifics sooner?{' '}
-          <a href="#contact" className="results-note-link">
+          <a href={PUBLISHER_SIGNUP_URL} className="results-note-link">
             Just ask.
           </a>
         </p>

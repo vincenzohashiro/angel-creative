@@ -1,12 +1,13 @@
 import Brand from './Brand'
 import useReveal from '../hooks/useReveal'
+import { PUBLISHER_SIGNUP_URL } from '../constants'
 import './Footer.css'
 
 const footerLinks = [
   { href: '#deliverables', label: 'What We Do' },
   { href: '#verticals', label: 'Verticals' },
   { href: '#work', label: 'Results' },
-  { href: '#contact', label: 'Contact' },
+  { href: PUBLISHER_SIGNUP_URL, label: 'Contact' },
 ]
 
 function Footer() {
