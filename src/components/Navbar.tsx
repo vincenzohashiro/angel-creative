@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Brand from './Brand'
 import Button from './Button'
+import { PUBLISHER_SIGNUP_URL } from '../constants'
 import './Navbar.css'
 
 const navLinks = [
@@ -40,7 +41,7 @@ function Navbar() {
         </ul>
 
         <div className="navbar-cta">
-          <Button href="#contact" variant="outline">
+          <Button href={PUBLISHER_SIGNUP_URL} variant="outline">
             Get in touch
           </Button>
         </div>

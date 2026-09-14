@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import SectionHead from './SectionHead'
 import useReveal from '../hooks/useReveal'
+import { PUBLISHER_SIGNUP_URL } from '../constants'
 import './Deliverables.css'
 
 type Point = { heading: string; text: string }
@@ -177,7 +178,7 @@ function Deliverables() {
             <span className="deliver-point-num">{formatNumber(active.points.length)}</span>
             <h4>{active.cta.heading}</h4>
             <p>{active.cta.text}</p>
-            <a href="#contact" className="deliver-cta-link">
+            <a href={PUBLISHER_SIGNUP_URL} className="deliver-cta-link">
               Get in touch
               <ArrowIcon />
             </a>
