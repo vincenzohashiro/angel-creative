@@ -9,7 +9,6 @@ const navLinks = [
   { href: '#verticals', label: 'Verticals' },
   { href: '#process', label: 'Process' },
   { href: '#work', label: 'Results' },
-  { href: PUBLISHER_SIGNUP_URL, label: 'Contact' },
 ]
 
 function Navbar() {
