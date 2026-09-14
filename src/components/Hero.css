@@ -1,7 +1,15 @@
 .hero {
+  position: relative;
+  overflow: hidden;
   padding-top: clamp(72px, 11vw, 128px);
   padding-bottom: clamp(64px, 9vw, 108px);
   text-align: center;
+}
+
+.hero-vanta-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
 .hero-inner {
@@ -9,6 +17,12 @@
   z-index: 1;
   max-width: 780px;
   margin: 0 auto;
+  pointer-events: none;
+}
+
+.hero-inner a,
+.hero-inner button {
+  pointer-events: auto;
 }
 
 .hero-badge {

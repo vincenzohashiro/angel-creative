@@ -1,6 +1,7 @@
 import SectionHead from './SectionHead'
 import useReveal from '../hooks/useReveal'
 import { PUBLISHER_SIGNUP_URL } from '../constants'
+import resultsBg from '../assets/results-bg.webp'
 import './Results.css'
 
 const results = [
@@ -15,6 +16,9 @@ function Results() {
 
   return (
     <section id="work" ref={ref} className={isVisible ? 'is-visible' : undefined}>
+      <div className="results-bg" aria-hidden="true">
+        <img src={resultsBg} alt="" className="results-bg-image" />
+      </div>
       <div className="wrap">
         <SectionHead
           eyebrow="Results"

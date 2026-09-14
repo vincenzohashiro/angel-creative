@@ -19,11 +19,11 @@ const services: Service[] = [
     title: 'Leads',
     tag: 'Form Verified',
     intro:
-      "At Angel Creative, compliance comes first. We specialize in high-quality, high-intent data leads developed through responsible acquisition practices and compliance-focused processes — connecting businesses with consumers who've already expressed real interest.",
+      "At Angel Creative, compliance comes first. We specialize in high-quality, high-intent data leads developed through responsible acquisition practices and compliance-focused processes, connecting businesses with consumers who've already expressed real interest.",
     points: [
       {
         heading: 'Quality-First Generation',
-        text: 'Our customized lead solutions connect businesses with consumers who have expressed interest in relevant products and services — helping strengthen email campaigns, increase call-center activity, and turn consumer intent into measurable growth.',
+        text: 'Our customized lead solutions connect businesses with consumers who have expressed interest in relevant products and services, helping strengthen email campaigns, increase call-center activity, and turn consumer intent into measurable growth.',
       },
       {
         heading: 'Verified for Accuracy',
@@ -67,11 +67,11 @@ const services: Service[] = [
     title: 'Calls',
     tag: 'Live and Ready',
     intro:
-      'Connect your agents with pre-qualified consumers who are actively looking for your products or services. Angel Creative delivers live inbound calls directly to your call center or IVR — giving your team valuable opportunities to turn real-time interest into new customers.',
+      'Connect your agents with pre-qualified consumers who are actively looking for your products or services. Angel Creative delivers live inbound calls directly to your call center or IVR, giving your team valuable opportunities to turn real-time interest into new customers.',
     points: [
       {
         heading: 'Intelligent, Real-Time Routing',
-        text: 'Calls are routed in real time according to geography, operating hours, agent availability, capacity, and your custom business rules — helping the right opportunities reach the right agents at the right moment.',
+        text: 'Calls are routed in real time according to geography, operating hours, agent availability, capacity, and your custom business rules, helping the right opportunities reach the right agents at the right moment.',
       },
       {
         heading: 'Compliance Comes First',
@@ -128,11 +128,17 @@ function Deliverables() {
         </div>
 
         <div className="deliver-intro">
-          <div>
+          <div className="deliver-intro-head" key={`${activeIndex}-head`} style={{ animationDelay: '0s' }}>
             <p className="deliver-intro-tag">{active.tag}</p>
             <h3 className="deliver-intro-title">{active.title}</h3>
           </div>
-          <p className="deliver-intro-text">{active.intro}</p>
+          <p
+            className="deliver-intro-text"
+            key={`${activeIndex}-text`}
+            style={{ animationDelay: '0.1s' }}
+          >
+            {active.intro}
+          </p>
         </div>
 
         <div className="deliver-points">
@@ -149,7 +155,11 @@ function Deliverables() {
               .filter(Boolean)
               .join(' ')
             return (
-              <div className={className} key={point.heading}>
+              <div
+                className={className}
+                key={`${activeIndex}-${index}`}
+                style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+              >
                 <span className="deliver-point-num">{formatNumber(index)}</span>
                 <h4>{point.heading}</h4>
                 <p>{point.text}</p>
@@ -162,6 +172,8 @@ function Deliverables() {
                 ? 'deliver-point deliver-point-cta deliver-point-span'
                 : 'deliver-point deliver-point-cta deliver-point-noright deliver-point-nobottom'
             }
+            key={`${activeIndex}-cta`}
+            style={{ animationDelay: `${0.2 + active.points.length * 0.1}s` }}
           >
             <span className="deliver-point-num">{formatNumber(active.points.length)}</span>
             <h4>{active.cta.heading}</h4>
