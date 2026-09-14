@@ -35,6 +35,24 @@ function ArrowIcon() {
   )
 }
 
+function EmailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M3 7l9 6 9-6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function LocationIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="9.5" r="2.5" />
+    </svg>
+  )
+}
+
 const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_FORM_ID
   ? `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_FORM_ID}`
   : null
@@ -86,16 +104,35 @@ function Contact() {
       </div>
       <div className="wrap contact-grid">
         <div>
-          <Eyebrow>Get in touch</Eyebrow>
+          <Eyebrow>Sign Up</Eyebrow>
           <h2>Publisher Partners: Book a meeting on my calendar</h2>
           <p className="contact-sub">
             Need Leads, Calls, or Traffic? Tell us about the offer and we will follow up within
             24 hours.
           </p>
-          <a href="mailto:ads@angelcreativeads.com" className="contact-email">
-            ads@angelcreativeads.com
-            <ArrowIcon />
-          </a>
+
+          <div className="contact-info">
+            <div className="contact-info-item">
+              <span className="contact-info-icon">
+                <EmailIcon />
+              </span>
+              <span className="contact-info-text">
+                <span className="contact-info-label">Email</span>
+                <a href="mailto:ads@angelcreativeads.com" className="contact-info-value">
+                  ads@angelcreativeads.com
+                </a>
+              </span>
+            </div>
+            <div className="contact-info-item">
+              <span className="contact-info-icon">
+                <LocationIcon />
+              </span>
+              <span className="contact-info-text">
+                <span className="contact-info-label">Location</span>
+                <span className="contact-info-value">Austin, TX</span>
+              </span>
+            </div>
+          </div>
 
           <div className="contact-stats">
             {stats.map((stat) => (
