@@ -27,12 +27,6 @@
   gap: 64px;
 }
 
-.contact h2 {
-  max-width: 440px;
-  font-size: clamp(30px, 3.8vw, 42px);
-  color: var(--fg);
-}
-
 .contact-sub {
   max-width: 400px;
   margin: 22px 0 30px;

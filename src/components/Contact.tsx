@@ -104,8 +104,7 @@ function Contact() {
       </div>
       <div className="wrap contact-grid">
         <div>
-          <Eyebrow>Sign Up</Eyebrow>
-          <h2>Publisher Partners: Book a meeting on my calendar</h2>
+          <Eyebrow>Contact Us</Eyebrow>
           <p className="contact-sub">
             Need Leads, Calls, or Traffic? Tell us about the offer and we will follow up within
             24 hours.
