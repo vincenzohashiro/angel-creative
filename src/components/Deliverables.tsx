@@ -179,7 +179,7 @@ function Deliverables() {
             <h4>{active.cta.heading}</h4>
             <p>{active.cta.text}</p>
             <a href={PUBLISHER_SIGNUP_URL} className="deliver-cta-link">
-              Get in touch
+              Sign Up
               <ArrowIcon />
             </a>
           </div>

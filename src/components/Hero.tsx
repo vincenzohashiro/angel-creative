@@ -84,7 +84,7 @@ function Hero() {
             View verticals
           </Button>
           <Button href={PUBLISHER_SIGNUP_URL} variant="outline">
-            Get in touch
+            Sign Up
           </Button>
         </div>
       </div>
