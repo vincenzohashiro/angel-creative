@@ -1,6 +1,5 @@
 import SectionHead from './SectionHead'
 import useReveal from '../hooks/useReveal'
-import { PUBLISHER_SIGNUP_URL } from '../constants'
 import resultsBg from '../assets/results-bg.webp'
 import './Results.css'
 
@@ -27,7 +26,7 @@ function Results() {
         />
         <div className="results-list">
           {results.map((item) => (
-            <a className="result-row" href={PUBLISHER_SIGNUP_URL} key={item.title}>
+            <a className="result-row" href="#contact" key={item.title}>
               <span className="result-left">
                 <span className="result-tag">{item.tag}</span>
                 <span className="result-title">{item.title}</span>
@@ -38,7 +37,7 @@ function Results() {
         </div>
         <p className="results-note">
           Want specifics sooner?{' '}
-          <a href={PUBLISHER_SIGNUP_URL} className="results-note-link">
+          <a href="#contact" className="results-note-link">
             Just ask.
           </a>
         </p>

@@ -9,6 +9,7 @@ const navLinks = [
   { href: '#verticals', label: 'Verticals' },
   { href: '#process', label: 'Process' },
   { href: '#work', label: 'Results' },
+  { href: '#contact', label: 'Contact Us' },
 ]
 
 function Navbar() {
