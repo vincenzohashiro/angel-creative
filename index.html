@@ -8,8 +8,7 @@
         var q = window.location.search;
         if (q && q.indexOf('?p=') === 0) {
           var path = q.slice(3).replace(/~and~/g, '&').split('&q=');
-          var url = window.location.pathname.replace(/\/$/, '') + '/' + path[0] +
-            (path[1] ? '?' + path[1] : '') + window.location.hash;
+          var url = path[0] + (path[1] ? '?' + path[1] : '') + window.location.hash;
           window.history.replaceState(null, null, url);
         }
       })();
