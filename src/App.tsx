@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Deliverables from './components/Deliverables'
@@ -8,8 +9,9 @@ import Results from './components/Results'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import GradientOrbs from './components/GradientOrbs'
+import Dashboard from './dashboard/Dashboard'
 
-function App() {
+function MarketingSite() {
   useEffect(() => {
     function handleClick(event: MouseEvent) {
       const anchor = (event.target as HTMLElement).closest('a[href^="#"]')
@@ -43,6 +45,16 @@ function App() {
       </main>
       <Footer />
     </>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<MarketingSite />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard/*" element={<Dashboard />} />
+    </Routes>
   )
 }
 
