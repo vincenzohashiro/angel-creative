@@ -1,0 +1,105 @@
+/* ── New Entry card ────────────────────────────────── */
+
+.ne-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ── Tabs ─────────────────────────────────────────── */
+
+.ne-tabs {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-deep);
+  scrollbar-width: none;
+}
+
+.ne-tabs::-webkit-scrollbar { display: none; }
+
+.ne-tab {
+  flex-shrink: 0;
+  padding: 12px 18px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--fg-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+
+.ne-tab:hover { color: var(--fg-soft); }
+
+.ne-tab.is-active {
+  color: var(--fg);
+  border-bottom-color: var(--red);
+}
+
+/* ── Form body ────────────────────────────────────── */
+
+.ne-body { padding: 24px; }
+
+.ne-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── SLA notice ───────────────────────────────────── */
+
+.ne-sla-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(212,168,75,0.06);
+  border: 1px solid rgba(212,168,75,0.2);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #d4a84b;
+}
+
+/* ── Success / error ──────────────────────────────── */
+
+.ne-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(74,158,94,0.06);
+  border: 1px solid rgba(74,158,94,0.2);
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #7cc08a;
+}
+
+.ne-success::before {
+  content: '✓';
+  font-size: 14px;
+}
+
+.ne-error {
+  background: rgba(226,34,42,0.06);
+  border: 1px solid rgba(226,34,42,0.2);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #e2636b;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .ne-body { padding: 16px; }
+  .ne-tab { padding: 10px 12px; font-size: 10px; }
+}

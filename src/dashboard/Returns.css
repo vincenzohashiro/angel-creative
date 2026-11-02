@@ -1,0 +1,30 @@
+.ret-breach td {
+  background: rgba(226,34,42,0.03) !important;
+}
+
+.ret-age {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ret-age.is-breach { color: var(--red); }
+
+.ret-breach-tag {
+  background: rgba(226,34,42,0.12);
+  color: var(--red);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.ret-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
