@@ -9,11 +9,12 @@ import Callgrid from './Callgrid'
 import Returns from './Returns'
 import Tasks from './Tasks'
 import Issues from './Issues'
+import CallLog from './CallLog'
 import './Dashboard.css'
 
 export type View =
   | 'home' | 'new-entry'
-  | 'clients' | 'billing' | 'callgrid' | 'returns'
+  | 'clients' | 'billing' | 'callgrid' | 'returns' | 'calllog'
   | 'tasks' | 'issues'
 
 type NavItem = { id: View; label: string; icon: React.ReactElement }
@@ -38,6 +39,7 @@ const SECTIONS: { heading: string; items: NavItem[] }[] = [
       { id: 'billing',  label: 'Billing',  icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.4"/><path d="M1.5 5.5h12" stroke="currentColor" strokeWidth="1.4"/><path d="M4.5 9h3M4.5 11h5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg> },
       { id: 'callgrid', label: 'Callgrid', icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 2.5C3 2.5 2 6 4.5 8.5C7 11 10.5 10 10.5 10L12.5 8C12.5 8 11 7 10 7.5L9 8.5C9 8.5 7 7.5 6.5 6.5L7.5 5.5C8 4.5 7 3 7 3L5 1.5C5 1.5 3.5 2 3 2.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg> },
       { id: 'returns',  label: 'Returns',  icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M4 5H11C12.1 5 13 5.9 13 7V9C13 10.1 12.1 11 11 11H7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><path d="M6 8L3.5 5.5L6 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> },
+      { id: 'calllog',  label: 'Call Log', icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.4"/><path d="M4.5 5.5h6M4.5 7.5h6M4.5 9.5h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg> },
     ],
   },
   {
@@ -115,6 +117,7 @@ export default function Dashboard() {
             {view === 'billing'   && <Billing   />}
             {view === 'callgrid'  && <Callgrid  />}
             {view === 'returns'   && <Returns   />}
+            {view === 'calllog'   && <CallLog   />}
             {view === 'tasks'     && <Tasks     />}
             {view === 'issues'    && <Issues    />}
           </main>

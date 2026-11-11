@@ -4,15 +4,16 @@ import type { View } from './Dashboard'
 import type { ClientStatus, InvoiceStatus, CampaignStatus, ReturnReason, Priority, TaskStatus, IssueStatus } from './types'
 import './NewEntry.css'
 
-type Tab = 'client' | 'invoice' | 'campaign' | 'return' | 'task' | 'issue'
+type Tab = 'client' | 'invoice' | 'campaign' | 'return' | 'calllog' | 'task' | 'issue'
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'client',   label: 'Client'   },
-  { id: 'invoice',  label: 'Invoice'  },
-  { id: 'campaign', label: 'Campaign' },
+  { id: 'client',   label: 'Client'      },
+  { id: 'invoice',  label: 'Invoice'     },
+  { id: 'campaign', label: 'Campaign'    },
   { id: 'return',   label: 'Return Call' },
-  { id: 'task',     label: 'Task'     },
-  { id: 'issue',    label: 'Issue'    },
+  { id: 'calllog',  label: 'Call Log'    },
+  { id: 'task',     label: 'Task'        },
+  { id: 'issue',    label: 'Issue'       },
 ]
 
 const VERTICALS = ['Auto Insurance','Debt Settlement','Health','Home Insurance','Home Services','Personal Finance','Pet Insurance','Solar','Other']
@@ -54,6 +55,7 @@ export default function NewEntry({ navigate }: { navigate: (v: View) => void }) 
           {tab === 'invoice'  && <InvoiceForm  crm={crm} flash={flash} navigate={navigate} />}
           {tab === 'campaign' && <CampaignForm crm={crm} flash={flash} navigate={navigate} />}
           {tab === 'return'   && <ReturnForm   crm={crm} flash={flash} navigate={navigate} />}
+          {tab === 'calllog'  && <CallLogForm   crm={crm} flash={flash} navigate={navigate} />}
           {tab === 'task'     && <TaskForm     crm={crm} flash={flash} navigate={navigate} />}
           {tab === 'issue'    && <IssueForm    crm={crm} flash={flash} navigate={navigate} />}
         </div>
@@ -394,6 +396,80 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
       </div>
       <div className="db-form-actions">
         <button type="submit" className="db-btn">Create Task</button>
+      </div>
+    </form>
+  )
+}
+
+// ── Call Log form ──────────────────────────────────────────────────────────
+
+function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
+  const [f, setF] = useState({ buyer: '', callerId: '', reason: '', vendor: '', date: '', reportingUpdated: false, vendorAlerted: false, notes: '' })
+  const [err, setErr] = useState('')
+  const fmtDate = () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!f.buyer.trim())    { setErr('Buyer is required.'); return }
+    if (!f.callerId.trim()) { setErr('Caller ID is required.'); return }
+    crm.addCallLog({
+      date: f.date || fmtDate(),
+      buyer: f.buyer.trim(),
+      callerId: f.callerId.trim(),
+      reason: f.reason.trim(),
+      vendor: f.vendor.trim(),
+      reportingUpdated: f.reportingUpdated,
+      vendorAlerted: f.vendorAlerted,
+      notes: f.notes,
+      source: 'Manual',
+    })
+    setF({ buyer: '', callerId: '', reason: '', vendor: '', date: '', reportingUpdated: false, vendorAlerted: false, notes: '' })
+    setErr('')
+    flash('Call log entry added.')
+    navigate('calllog')
+  }
+
+  return (
+    <form className="ne-form" onSubmit={submit}>
+      {err && <p className="ne-error">{err}</p>}
+      <div className="db-field-row">
+        <Field label="Buyer / Client *">
+          <input className="db-input" placeholder="e.g. Elite Media" value={f.buyer} onChange={e => setF(p => ({ ...p, buyer: e.target.value }))} />
+        </Field>
+        <Field label="Caller ID *">
+          <input className="db-input" placeholder="e.g. 16158281263" value={f.callerId} onChange={e => setF(p => ({ ...p, callerId: e.target.value }))} />
+        </Field>
+      </div>
+      <Field label="Reason / Dispute Description">
+        <input className="db-input" placeholder="e.g. Buyer said it was a transfer on an inbound line" value={f.reason} onChange={e => setF(p => ({ ...p, reason: e.target.value }))} />
+      </Field>
+      <div className="db-field-row">
+        <Field label="Vendor">
+          <input className="db-input" placeholder="e.g. RNT Winkels" value={f.vendor} onChange={e => setF(p => ({ ...p, vendor: e.target.value }))} />
+        </Field>
+        <Field label="Date">
+          <input className="db-input" placeholder={fmtDate()} value={f.date} onChange={e => setF(p => ({ ...p, date: e.target.value }))} />
+        </Field>
+      </div>
+      <div className="db-field-row">
+        <Field label="Reporting Updated?">
+          <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', paddingTop: 6 }}>
+            <input type="checkbox" checked={f.reportingUpdated} onChange={e => setF(p => ({ ...p, reportingUpdated: e.target.checked }))} style={{ width: 16, height: 16 }} />
+            <span style={{ fontSize: 13, color: 'var(--fg-soft)' }}>Yes — reporting updated</span>
+          </label>
+        </Field>
+        <Field label="Vendor Alerted?">
+          <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', paddingTop: 6 }}>
+            <input type="checkbox" checked={f.vendorAlerted} onChange={e => setF(p => ({ ...p, vendorAlerted: e.target.checked }))} style={{ width: 16, height: 16 }} />
+            <span style={{ fontSize: 13, color: 'var(--fg-soft)' }}>Yes — vendor alerted</span>
+          </label>
+        </Field>
+      </div>
+      <Field label="Notes">
+        <input className="db-input" placeholder="Optional notes..." value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
+      </Field>
+      <div className="db-form-actions">
+        <button type="submit" className="db-btn">Add to Call Log</button>
       </div>
     </form>
   )

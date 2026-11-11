@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import type {
-  Client, Invoice, Campaign, ReturnCall, Task, Issue,
+  Client, Invoice, Campaign, ReturnCall, Task, Issue, CallLog,
   PendingItem, ClientNote,
 } from './types'
 import {
   KEYS, load, save,
   SEED_CLIENTS, SEED_INVOICES, SEED_CAMPAIGNS,
-  SEED_RETURNS, SEED_TASKS, SEED_ISSUES,
+  SEED_RETURNS, SEED_TASKS, SEED_ISSUES, SEED_CALLLOGS,
 } from './store'
 
 type Ctx = {
@@ -16,6 +16,7 @@ type Ctx = {
   returns:   ReturnCall[]
   tasks:     Task[]
   issues:    Issue[]
+  calllogs:  CallLog[]
 
   // Clients
   addClient:          (d: Omit<Client, 'id' | 'pending' | 'notes'>) => void
@@ -49,6 +50,12 @@ type Ctx = {
   addIssue:           (d: Omit<Issue, 'id' | 'createdAt' | 'updatedAt' | 'resolvedAt'>) => void
   updateIssue:        (id: string, d: Partial<Issue>) => void
   removeIssue:        (id: string) => void
+
+  // Call Logs
+  addCallLog:         (d: Omit<CallLog, 'id' | 'loggedAt'>) => void
+  updateCallLog:      (id: string, d: Partial<CallLog>) => void
+  removeCallLog:      (id: string) => void
+  clearCallLogs:      () => void
 }
 
 const CRMContext = createContext<Ctx | null>(null)
@@ -60,6 +67,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
   const [returns,   setReturns]   = useState<ReturnCall[]>(() => load(KEYS.returns,  SEED_RETURNS))
   const [tasks,     setTasks]     = useState<Task[]>     (() => load(KEYS.tasks,     SEED_TASKS))
   const [issues,    setIssues]    = useState<Issue[]>    (() => load(KEYS.issues,    SEED_ISSUES))
+  const [calllogs,  setCalllogs]  = useState<CallLog[]>  (() => load(KEYS.calllogs,  SEED_CALLLOGS))
 
   useEffect(() => { save(KEYS.clients,   clients)   }, [clients])
   useEffect(() => { save(KEYS.invoices,  invoices)  }, [invoices])
@@ -67,6 +75,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
   useEffect(() => { save(KEYS.returns,   returns)   }, [returns])
   useEffect(() => { save(KEYS.tasks,     tasks)     }, [tasks])
   useEffect(() => { save(KEYS.issues,    issues)    }, [issues])
+  useEffect(() => { save(KEYS.calllogs,  calllogs)  }, [calllogs])
 
   const uid = () => crypto.randomUUID()
   const today = () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -150,15 +159,29 @@ export function CRMProvider({ children }: { children: ReactNode }) {
   const removeIssue = (id: string) =>
     setIssues(p => p.filter(i => i.id !== id))
 
+  // ── Call Logs ────────────────────────────────────────────────────────────
+
+  const addCallLog = (d: Omit<CallLog, 'id' | 'loggedAt'>) =>
+    setCalllogs(p => [{ source: 'Manual', ...d, id: uid(), loggedAt: Date.now() }, ...p])
+
+  const updateCallLog = (id: string, d: Partial<CallLog>) =>
+    setCalllogs(p => p.map(l => l.id === id ? { ...l, ...d } : l))
+
+  const removeCallLog = (id: string) =>
+    setCalllogs(p => p.filter(l => l.id !== id))
+
+  const clearCallLogs = () => setCalllogs([])
+
   return (
     <CRMContext.Provider value={{
-      clients, invoices, campaigns, returns, tasks, issues,
+      clients, invoices, campaigns, returns, tasks, issues, calllogs,
       addClient, updateClient, removeClient, setClientPending, setClientNotes,
       addInvoice, updateInvoice, removeInvoice,
       addCampaign, updateCampaign, removeCampaign,
       addReturn, alertReturn, confirmReturn, removeReturn,
       addTask, updateTask, removeTask,
       addIssue, updateIssue, removeIssue,
+      addCallLog, updateCallLog, removeCallLog, clearCallLogs,
     }}>
       {children}
     </CRMContext.Provider>

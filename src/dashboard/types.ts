@@ -105,6 +105,20 @@ export type Task = {
 
 export type IssueStatus = 'Open' | 'In Progress' | 'Resolved' | 'Escalated'
 
+export type CallLog = {
+  id: string
+  date: string
+  buyer: string          // media buyer / client name
+  callerId: string       // phone / caller ID
+  reason: string         // dispute reason (free text)
+  vendor: string         // traffic vendor to alert
+  reportingUpdated: boolean
+  vendorAlerted: boolean
+  loggedAt: number       // Unix ms — for sort order
+  notes: string
+  source: 'Manual' | 'Telegram'
+}
+
 export type Issue = {
   id: string
   title: string

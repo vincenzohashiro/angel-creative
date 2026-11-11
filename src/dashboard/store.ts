@@ -1,4 +1,4 @@
-import type { Client, Invoice, Campaign, ReturnCall, Task, Issue } from './types'
+import type { Client, Invoice, Campaign, ReturnCall, Task, Issue, CallLog } from './types'
 
 export const KEYS = {
   clients:   'ac_crm_clients_v3',
@@ -7,6 +7,7 @@ export const KEYS = {
   returns:   'ac_crm_returns_v2',
   tasks:     'ac_crm_tasks_v2',
   issues:    'ac_crm_issues_v2',
+  calllogs:  'ac_crm_calllogs_v1',
 }
 
 export function load<T>(key: string, fallback: T): T {
@@ -143,6 +144,17 @@ export const SEED_TASKS: Task[] = [
   { id: 't4', title: 'Confirm Ifficient payout discrepancy resolved', description: 'Oct 12 calls 16123857235 and 12058429720 billing issue.', clientId: 'c1', clientName: 'Ifficient', priority: 'High', status: 'In Progress', dueDate: 'Nov 04', createdAt: 'Oct 27', completedAt: '', source: 'Telegram' },
   { id: 't5', title: 'Onboard Valueleaf — send offer sheet + campaign setup', description: '', clientId: 'c6', clientName: 'Valueleaf', priority: 'Medium', status: 'Open', dueDate: 'Nov 07', createdAt: 'Nov 03', completedAt: '', source: 'Manual' },
   { id: 't6', title: 'Review Solar lead quality report — Elite Media', description: '', clientId: 'c3', clientName: 'Elite Media', priority: 'Low', status: 'Done', dueDate: 'Oct 31', createdAt: 'Oct 20', completedAt: 'Oct 30', source: 'Manual' },
+]
+
+export const SEED_CALLLOGS: CallLog[] = [
+  { id: 'cl1', date: 'Oct 23', buyer: 'Elite Media',          callerId: '16158281263', reason: 'Buyer said it was a transfer on an inbound line', vendor: 'RNT Winkels', reportingUpdated: true,  vendorAlerted: true,  loggedAt: Date.now() - 12 * 86400_000, notes: '', source: 'Telegram' },
+  { id: 'cl2', date: 'Oct 23', buyer: 'Elite Media',          callerId: '9362523865',  reason: 'Under duration',                                  vendor: 'RNT Winkels', reportingUpdated: false, vendorAlerted: false, loggedAt: Date.now() - 12 * 86400_000, notes: '', source: 'Telegram' },
+  { id: 'cl3', date: 'Oct 23', buyer: 'Elite Media',          callerId: '2482234566',  reason: 'Dead air',                                        vendor: 'RNT Winkels', reportingUpdated: false, vendorAlerted: true,  loggedAt: Date.now() - 12 * 86400_000, notes: '', source: 'Telegram' },
+  { id: 'cl4', date: 'Oct 23', buyer: 'Elite Media',          callerId: '4045492159',  reason: 'Wrong number',                                    vendor: 'RNT Winkels', reportingUpdated: false, vendorAlerted: false, loggedAt: Date.now() - 12 * 86400_000, notes: '', source: 'Telegram' },
+  { id: 'cl5', date: 'Oct 25', buyer: 'Ifficient',            callerId: '16123857235', reason: 'Not in payout — call not reflected on buyer side', vendor: 'TrafficCo',   reportingUpdated: true,  vendorAlerted: true,  loggedAt: Date.now() - 10 * 86400_000, notes: 'Escalated to CM Santiago', source: 'Telegram' },
+  { id: 'cl6', date: 'Oct 25', buyer: 'Ifficient',            callerId: '12058429720', reason: 'Not in payout — call not reflected on buyer side', vendor: 'TrafficCo',   reportingUpdated: false, vendorAlerted: true,  loggedAt: Date.now() - 10 * 86400_000, notes: '', source: 'Telegram' },
+  { id: 'cl7', date: 'Oct 30', buyer: 'Phantom Media',        callerId: '6145559823',  reason: 'Customer service complaint',                       vendor: 'LeadGen Pro', reportingUpdated: false, vendorAlerted: false, loggedAt: Date.now() - 5  * 86400_000, notes: '', source: 'Manual' },
+  { id: 'cl8', date: 'Nov 02', buyer: '1st Choice Marketing', callerId: '5025559012',  reason: 'Duplicate call',                                  vendor: 'MediaBridge', reportingUpdated: false, vendorAlerted: false, loggedAt: Date.now() - 2  * 86400_000, notes: '', source: 'Manual' },
 ]
 
 export const SEED_ISSUES: Issue[] = [
