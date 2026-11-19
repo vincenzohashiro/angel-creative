@@ -1,6 +1,12 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useCRM } from './CRMContext'
 import type { Priority, TaskStatus } from './types'
+
+function parseCSV(raw: string): string[][] {
+  return raw.trim().split('\n').map(line =>
+    line.split(',').map(cell => cell.replace(/^"|"$/g, '').trim())
+  )
+}
 
 const priBadge = (p: Priority) => <span className={`db-badge ${p === 'High' ? 'pri-high' : p === 'Medium' ? 'pri-medium' : 'pri-low'}`}>{p}</span>
 
@@ -15,12 +21,64 @@ function isOverdue(dueDate: string, status: TaskStatus) {
 }
 
 export default function Tasks() {
-  const { tasks, updateTask, removeTask: deleteTask } = useCRM()
+  const { tasks, addTask, updateTask, removeTask: deleteTask } = useCRM()
   const [search, setSearch] = useState('')
   const [filterStatus, setFilterStatus] = useState<TaskStatus | 'All'>('All')
   const [filterPri, setFilterPri] = useState<Priority | 'All'>('All')
   const [confirm, setConfirm] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [syncing, setSyncing]   = useState(false)
+  const [syncMsg, setSyncMsg]   = useState('')
+  const [showConfig, setShowConfig] = useState(false)
+  const [taskSheetUrl, setTaskSheetUrl] = useState(() => {
+    try { return localStorage.getItem('ac_tasks_csv_url') || '' } catch { return '' }
+  })
+
+  const syncFromSheet = useCallback(async (overrideExisting?: Set<string>) => {
+    const url = taskSheetUrl.trim()
+    if (!url) { setShowConfig(true); return }
+    setSyncing(true); setSyncMsg('')
+    try {
+      const res = await fetch(url)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const text = await res.text()
+      if (text.trimStart().startsWith('<'))
+        throw new Error('Sheet not published — File → Share → Publish to web → Tasks tab → CSV')
+      const rows = parseCSV(text)
+      const dataRows = rows[0]?.[0]?.match(/^[A-Za-z]/) ? rows.slice(1) : rows
+      const existing = overrideExisting ?? new Set(tasks.map(t => t.title + '|' + t.createdAt))
+      let added = 0
+      for (const row of dataRows) {
+        if (row.length < 2) continue
+        const title = row[1]?.trim()
+        if (!title) continue
+        const key = title + '|' + (row[0]?.trim() || '')
+        if (existing.has(key)) continue
+        const priority = (['High','Medium','Low'] as Priority[]).includes(row[4] as Priority)
+          ? row[4] as Priority : 'Medium'
+        const status = (['Open','In Progress','Done'] as TaskStatus[]).includes(row[6] as TaskStatus)
+          ? row[6] as TaskStatus : 'Open'
+        addTask({
+          title,
+          description: row[2]?.trim() || '',
+          clientId:    '',
+          clientName:  row[3]?.trim() || '',
+          priority,
+          dueDate:     row[5]?.trim() || '',
+          status,
+          source:      'Telegram',
+        })
+        existing.add(key)
+        added++
+      }
+      setSyncMsg(added > 0 ? `Synced ${added} new task${added > 1 ? 's' : ''}.` : 'Already up to date.')
+    } catch (e) {
+      setSyncMsg(`Sync failed: ${e instanceof Error ? e.message : String(e)}`)
+    } finally {
+      setSyncing(false)
+      setTimeout(() => setSyncMsg(''), 5000)
+    }
+  }, [taskSheetUrl, tasks, addTask])
 
   const filtered = useMemo(() => {
     return tasks
@@ -50,6 +108,19 @@ export default function Tasks() {
         <div>
           <h1 className="db-view-title">Tasks</h1>
           <p className="db-view-sub">Action items · {tasks.length} total</p>
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {syncMsg && <span className="cl-sync-msg">{syncMsg}</span>}
+          <button className="db-btn db-btn-ghost" onClick={() => setShowConfig(true)} title="Configure Tasks sheet URL">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="2" stroke="currentColor" strokeWidth="1.4"/><path d="M6.5 1v1.5M6.5 10.5V12M12 6.5h-1.5M2.5 6.5H1M10.1 2.9l-1.06 1.06M3.96 9.04L2.9 10.1M10.1 10.1L9.04 9.04M3.96 3.96L2.9 2.9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+          </button>
+          <button className="db-btn" onClick={() => syncFromSheet()} disabled={syncing}>
+            {syncing
+              ? <span className="cl-spin">↻</span>
+              : <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M11 2.5A5.5 5.5 0 1 0 12 6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M12 1v3h-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            }
+            {syncing ? 'Syncing…' : 'Sync from Sheet'}
+          </button>
         </div>
       </div>
 
@@ -117,6 +188,7 @@ export default function Tasks() {
                         <td className="col-primary" style={{ cursor: 'pointer' }} onClick={() => setExpanded(expanded === task.id ? null : task.id)}>
                           {task.title}
                           {task.description && <span style={{ marginLeft: 6, color: 'var(--fg-dim)', fontSize: 11 }}>···</span>}
+                          {task.source === 'Telegram' && <span className="db-badge badge-tg" style={{ marginLeft: 6 }}>TG</span>}
                         </td>
                         <td>{task.clientName || '—'}</td>
                         <td>{priBadge(task.priority)}</td>
@@ -152,6 +224,51 @@ export default function Tasks() {
           </div>
         )}
       </div>
+
+      {showConfig && (
+        <div className="db-modal-backdrop" onClick={() => setShowConfig(false)}>
+          <div className="db-modal" onClick={e => e.stopPropagation()}>
+            <div className="db-modal-head">
+              <h2 className="db-modal-title">Tasks Sheet Sync</h2>
+              <button className="db-modal-close" onClick={() => setShowConfig(false)}>✕</button>
+            </div>
+            <div className="db-form">
+              <div className="db-field">
+                <label className="db-label">Published CSV URL — Tasks tab</label>
+                <input
+                  className="db-input"
+                  placeholder="https://docs.google.com/spreadsheets/d/.../pub?gid=...&output=csv"
+                  defaultValue={taskSheetUrl}
+                  id="tasks-url-input"
+                />
+                <p style={{ fontSize: 11, color: 'var(--fg-dim)', margin: '4px 0 0' }}>
+                  In Google Sheets: open the Tasks tab → File → Share → Publish to web → Tasks → CSV → Publish. Copy that URL here.
+                </p>
+              </div>
+              <div className="db-form-actions" style={{ justifyContent: 'space-between' }}>
+                <button className="db-btn db-btn-danger" onClick={() => {
+                  const el = document.getElementById('tasks-url-input') as HTMLInputElement
+                  const url = el?.value || ''
+                  setTaskSheetUrl(url)
+                  try { localStorage.setItem('ac_tasks_csv_url', url) } catch { /* noop */ }
+                  syncFromSheet(new Set<string>())
+                  setShowConfig(false)
+                }}>Reset &amp; Sync Fresh</button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button className="db-btn db-btn-ghost" onClick={() => setShowConfig(false)}>Cancel</button>
+                  <button className="db-btn" onClick={() => {
+                    const el = document.getElementById('tasks-url-input') as HTMLInputElement
+                    const url = el?.value || ''
+                    setTaskSheetUrl(url)
+                    try { localStorage.setItem('ac_tasks_csv_url', url) } catch { /* noop */ }
+                    setShowConfig(false)
+                  }}>Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {confirm && (
         <div className="db-modal-backdrop" onClick={() => setConfirm(null)}>
