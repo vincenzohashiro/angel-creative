@@ -44,7 +44,7 @@ export default function Home({ navigate }: { navigate: (v: View) => void }) {
 
     const atRisk = clients
       .filter(c => c.status === 'At Risk')
-      .map(c => ({ id: c.id, msg: `${c.name} — ${c.vertical}`, age: 0, type: 'client' as const }))
+      .map(c => ({ id: c.id, msg: `${c.name} — ${c.verticals.join(', ') || 'No vertical'}`, age: 0, type: 'client' as const }))
 
     const openIssues = issues
       .filter(i => i.priority === 'High' && i.status !== 'Resolved')

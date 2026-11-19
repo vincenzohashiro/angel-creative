@@ -8,7 +8,12 @@ export const KEYS = {
   tasks:     'ac_crm_tasks_v2',
   issues:    'ac_crm_issues_v2',
   calllogs:  'ac_crm_calllogs_v1',
+  verticals: 'ac_crm_verticals_v1',
+  vendors:   'ac_crm_vendors_v1',
 }
+
+export const DEFAULT_VERTICALS = ['Auto Insurance','Debt Settlement','Health','Home Insurance','Home Services','Personal Finance','Pet Insurance','Solar','Other']
+export const DEFAULT_VENDORS: string[] = ['RNT Winkels','TrafficCo','LeadGen Pro','MediaBridge']
 
 export function load<T>(key: string, fallback: T): T {
   try {
@@ -29,7 +34,7 @@ const h = (n: number) => now - n * 3600_000  // n hours ago
 export const SEED_CLIENTS: Client[] = [
   {
     id: 'c1', name: 'Ifficient', contact: '@travis0908', email: 'travis@ifficient.com',
-    vertical: 'Auto Insurance', monthlyRev: 12200, status: 'Active', source: 'Telegram',
+    verticals: ['Auto Insurance'], monthlyRev: 12200, status: 'Active', source: 'Telegram',
     since: 'Jan 2025', lastContact: 'Nov 3', tags: ['Priority', 'Auto'],
     pending: [
       { id: 'p1', text: 'Check Auto IB calls missing from payouts — Oct 12: 16123857235, 12058429720', done: false, createdAt: 'Oct 27' },
@@ -41,7 +46,7 @@ export const SEED_CLIENTS: Client[] = [
   },
   {
     id: 'c2', name: 'Phantom Media', contact: '@phantom_joe', email: 'joe@phantommedia.com',
-    vertical: 'Home Insurance', monthlyRev: 8400, status: 'Active', source: 'Telegram',
+    verticals: ['Home Insurance'], monthlyRev: 8400, status: 'Active', source: 'Telegram',
     since: 'Mar 2025', lastContact: 'Nov 1', tags: ['Home'],
     pending: [
       { id: 'p3', text: 'Send updated offer sheet for November', done: false, createdAt: 'Oct 25' },
@@ -52,7 +57,7 @@ export const SEED_CLIENTS: Client[] = [
   },
   {
     id: 'c3', name: 'Elite Media', contact: '@mdunn4', email: 'mdunn@elitemedia.com',
-    vertical: 'Solar', monthlyRev: 11500, status: 'Active', source: 'Telegram',
+    verticals: ['Solar'], monthlyRev: 11500, status: 'Active', source: 'Telegram',
     since: 'Feb 2025', lastContact: 'Oct 28', tags: ['Solar', 'Priority'],
     pending: [
       { id: 'p4', text: 'Follow up on call info sent Oct 22 — confirm received', done: false, createdAt: 'Oct 22' },
@@ -61,14 +66,14 @@ export const SEED_CLIENTS: Client[] = [
   },
   {
     id: 'c4', name: 'IDG', contact: '@idg_contact', email: 'ops@idg.com',
-    vertical: 'Personal Finance', monthlyRev: 7300, status: 'Active', source: 'Telegram',
+    verticals: ['Personal Finance'], monthlyRev: 7300, status: 'Active', source: 'Telegram',
     since: 'Apr 2025', lastContact: 'Oct 30', tags: [],
     pending: [],
     notes: [{ id: 'n3', text: 'Joe Wammack added Vincent to the group.', createdAt: 'Oct 28' }],
   },
   {
     id: 'c5', name: '1st Choice Marketing', contact: '@1stchoice_jason', email: 'jason@1stchoice.com',
-    vertical: 'Debt Settlement', monthlyRev: 9900, status: 'At Risk', source: 'Telegram',
+    verticals: ['Debt Settlement'], monthlyRev: 9900, status: 'At Risk', source: 'Telegram',
     since: 'May 2025', lastContact: 'Oct 24', tags: ['Debt'],
     pending: [
       { id: 'p5', text: 'Re-visit offers — no traffic showing on current campaigns', done: false, createdAt: 'Oct 24' },
@@ -78,7 +83,7 @@ export const SEED_CLIENTS: Client[] = [
   },
   {
     id: 'c6', name: 'Valueleaf', contact: '@valueleaf_ops', email: 'ops@valueleaf.com',
-    vertical: 'Home Services', monthlyRev: 0, status: 'Onboarding', source: 'Telegram',
+    verticals: ['Home Services'], monthlyRev: 0, status: 'Onboarding', source: 'Telegram',
     since: 'Nov 2026', lastContact: 'Nov 3', tags: ['New'],
     pending: [
       { id: 'p7', text: 'Send onboarding offer sheet', done: false, createdAt: 'Nov 3' },

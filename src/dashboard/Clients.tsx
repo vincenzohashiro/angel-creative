@@ -65,7 +65,7 @@ export default function Clients() {
     return crm.clients.filter(c => {
       const matchStatus = filterStatus === 'All' || c.status === filterStatus
       const q = search.toLowerCase()
-      const matchQ = !q || c.name.toLowerCase().includes(q) || c.contact.toLowerCase().includes(q) || c.vertical.toLowerCase().includes(q)
+      const matchQ = !q || c.name.toLowerCase().includes(q) || c.contact.toLowerCase().includes(q) || c.verticals.some(v => v.toLowerCase().includes(q))
       return matchStatus && matchQ
     })
   }, [crm.clients, search, filterStatus])
@@ -172,7 +172,7 @@ export default function Clients() {
           <div className="cl-pane">
             <div className="cl-info-grid">
               {[
-                ['Vertical', client.vertical],
+                ['Verticals', client.verticals.join(', ') || '—'],
                 ['Monthly Revenue', fmt(client.monthlyRev)],
                 ['Status', client.status],
                 ['Source', client.source],
@@ -258,7 +258,7 @@ export default function Clients() {
                 </div>
                 <div className="cl-card-mid">
                   <span className="cl-card-contact">{c.contact}</span>
-                  <span className="cl-card-vertical">{c.vertical}</span>
+                  <span className="cl-card-vertical">{c.verticals.join(', ') || '—'}</span>
                 </div>
                 <div className="cl-card-foot">
                   {open > 0

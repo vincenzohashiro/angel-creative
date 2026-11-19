@@ -19,7 +19,7 @@ export type Client = {
   name: string
   contact: string
   email: string
-  vertical: string
+  verticals: string[]
   monthlyRev: number
   status: ClientStatus
   source: ClientSource

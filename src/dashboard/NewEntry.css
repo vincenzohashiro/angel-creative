@@ -99,6 +99,57 @@
   margin: 0;
 }
 
+/* ── Vertical chips ───────────────────────────────── */
+
+.ne-vertical-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ne-vertical-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--bg-deep);
+  color: var(--fg-soft);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+.ne-vertical-chip input[type="checkbox"] {
+  display: none;
+}
+
+.ne-vertical-chip.is-checked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb, 60,130,246), 0.12);
+  color: var(--accent);
+}
+
+.ne-vertical-chip:hover {
+  border-color: var(--accent);
+}
+
+/* ── Add-vertical / add-vendor row ───────────────── */
+
+.ne-add-vertical {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ne-add-vertical .db-input {
+  flex: 1;
+}
+
 @media (max-width: 480px) {
   .ne-body { padding: 16px; }
   .ne-tab { padding: 10px 12px; font-size: 10px; }

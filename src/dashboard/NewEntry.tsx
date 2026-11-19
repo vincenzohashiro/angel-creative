@@ -16,7 +16,6 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'issue',    label: 'Issue'       },
 ]
 
-const VERTICALS = ['Auto Insurance','Debt Settlement','Health','Home Insurance','Home Services','Personal Finance','Pet Insurance','Solar','Other']
 const RETURN_REASONS: ReturnReason[] = ['Dead Air','Customer Service','Wrong Number','Duplicate','Under Duration','Other']
 const today = () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
@@ -89,8 +88,24 @@ function ClientSelect({ crm, value, onChange }: { crm: CRM; value: string; onCha
 // ── Client form ────────────────────────────────────────────────────────────
 
 function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
-  const [f, setF] = useState({ name: '', contact: '', email: '', vertical: VERTICALS[0], monthlyRev: '', status: 'Onboarding' as ClientStatus, source: 'Manual' as const, tags: '' })
+  const [f, setF] = useState({ name: '', contact: '', email: '', verticals: [] as string[], monthlyRev: '', status: 'Onboarding' as ClientStatus, source: 'Manual' as const, tags: '' })
   const [err, setErr] = useState('')
+  const [newVertical, setNewVertical] = useState('')
+
+  function toggleVertical(v: string) {
+    setF(p => ({
+      ...p,
+      verticals: p.verticals.includes(v) ? p.verticals.filter(x => x !== v) : [...p.verticals, v],
+    }))
+  }
+
+  function addNewVertical() {
+    const val = newVertical.trim()
+    if (!val) return
+    crm.addVertical(val)
+    setF(p => ({ ...p, verticals: p.verticals.includes(val) ? p.verticals : [...p.verticals, val] }))
+    setNewVertical('')
+  }
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -99,12 +114,12 @@ function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
     if (dup) { setErr(`A client named "${dup.name}" already exists.`); return }
     crm.addClient({
       name: f.name.trim(), contact: f.contact.trim(), email: f.email.trim(),
-      vertical: f.vertical, monthlyRev: Number(f.monthlyRev) || 0,
+      verticals: f.verticals, monthlyRev: Number(f.monthlyRev) || 0,
       status: f.status, source: f.source,
       since: today(), lastContact: today(),
       tags: f.tags.split(',').map(t => t.trim()).filter(Boolean),
     })
-    setF({ name: '', contact: '', email: '', vertical: VERTICALS[0], monthlyRev: '', status: 'Onboarding', source: 'Manual', tags: '' })
+    setF({ name: '', contact: '', email: '', verticals: [], monthlyRev: '', status: 'Onboarding', source: 'Manual', tags: '' })
     setErr('')
     flash('Client added successfully.')
     navigate('clients')
@@ -117,9 +132,9 @@ function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
         <Field label="Name / Company *">
           <input className="db-input" required placeholder="e.g. Ifficient" value={f.name} onChange={e => setF(p => ({ ...p, name: e.target.value }))} />
         </Field>
-        <Field label="Vertical">
-          <select className="db-input" value={f.vertical} onChange={e => setF(p => ({ ...p, vertical: e.target.value }))}>
-            {VERTICALS.map(v => <option key={v}>{v}</option>)}
+        <Field label="Status">
+          <select className="db-input" value={f.status} onChange={e => setF(p => ({ ...p, status: e.target.value as ClientStatus }))}>
+            <option>Onboarding</option><option>Active</option><option>Inactive</option><option>At Risk</option>
           </select>
         </Field>
       </div>
@@ -131,16 +146,29 @@ function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
           <input className="db-input" type="email" placeholder="email@company.com" value={f.email} onChange={e => setF(p => ({ ...p, email: e.target.value }))} />
         </Field>
       </div>
-      <div className="db-field-row">
-        <Field label="Monthly Revenue ($)">
-          <input className="db-input" type="number" min="0" placeholder="0" value={f.monthlyRev} onChange={e => setF(p => ({ ...p, monthlyRev: e.target.value }))} />
-        </Field>
-        <Field label="Status">
-          <select className="db-input" value={f.status} onChange={e => setF(p => ({ ...p, status: e.target.value as ClientStatus }))}>
-            <option>Onboarding</option><option>Active</option><option>Inactive</option><option>At Risk</option>
-          </select>
-        </Field>
-      </div>
+      <Field label="Monthly Revenue ($)">
+        <input className="db-input" type="number" min="0" placeholder="0" value={f.monthlyRev} onChange={e => setF(p => ({ ...p, monthlyRev: e.target.value }))} />
+      </Field>
+      <Field label="Verticals">
+        <div className="ne-vertical-grid">
+          {crm.verticals.map(v => (
+            <label key={v} className={`ne-vertical-chip${f.verticals.includes(v) ? ' is-checked' : ''}`}>
+              <input type="checkbox" checked={f.verticals.includes(v)} onChange={() => toggleVertical(v)} />
+              {v}
+            </label>
+          ))}
+        </div>
+        <div className="ne-add-vertical">
+          <input
+            className="db-input"
+            placeholder="Add new vertical…"
+            value={newVertical}
+            onChange={e => setNewVertical(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addNewVertical() } }}
+          />
+          <button type="button" className="db-btn db-btn-ghost" onClick={addNewVertical}>Add</button>
+        </div>
+      </Field>
       <Field label="Tags (comma-separated)">
         <input className="db-input" placeholder="e.g. Priority, Auto, Solar" value={f.tags} onChange={e => setF(p => ({ ...p, tags: e.target.value }))} />
       </Field>
@@ -216,7 +244,7 @@ function InvoiceForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
 // ── Campaign form ──────────────────────────────────────────────────────────
 
 function CampaignForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
-  const [f, setF] = useState({ clientId: '', name: '', vertical: VERTICALS[0], calls: '', connected: '', status: 'Live' as CampaignStatus, notes: '' })
+  const [f, setF] = useState({ clientId: '', name: '', vertical: crm.verticals[0] || '', calls: '', connected: '', status: 'Live' as CampaignStatus, notes: '' })
   const [err, setErr] = useState('')
 
   function submit(e: React.FormEvent) {
@@ -230,7 +258,7 @@ function CampaignForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
       calls: Number(f.calls) || 0, connected: Number(f.connected) || 0,
       status: f.status, notes: f.notes,
     })
-    setF({ clientId: '', name: '', vertical: VERTICALS[0], calls: '', connected: '', status: 'Live', notes: '' })
+    setF({ clientId: '', name: '', vertical: crm.verticals[0] || '', calls: '', connected: '', status: 'Live', notes: '' })
     setErr('')
     flash('Campaign added.')
     navigate('callgrid')
@@ -250,7 +278,7 @@ function CampaignForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
       <div className="db-field-row">
         <Field label="Vertical">
           <select className="db-input" value={f.vertical} onChange={e => setF(p => ({ ...p, vertical: e.target.value }))}>
-            {VERTICALS.map(v => <option key={v}>{v}</option>)}
+            {crm.verticals.map(v => <option key={v}>{v}</option>)}
           </select>
         </Field>
         <Field label="Status">
@@ -280,7 +308,7 @@ function CampaignForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
 // ── Return Call form ───────────────────────────────────────────────────────
 
 function ReturnForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
-  const [f, setF] = useState({ clientId: '', callId: '', phone: '', vertical: VERTICALS[0], reason: 'Dead Air' as ReturnReason, callDate: '', notes: '' })
+  const [f, setF] = useState({ clientId: '', callId: '', phone: '', vertical: crm.verticals[0] || '', reason: 'Dead Air' as ReturnReason, callDate: '', notes: '' })
   const [err, setErr] = useState('')
 
   function submit(e: React.FormEvent) {
@@ -293,7 +321,7 @@ function ReturnForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
       phone: f.phone.trim(), clientId: f.clientId, clientName: client.name,
       vertical: f.vertical, reason: f.reason, notes: f.notes,
     })
-    setF({ clientId: '', callId: '', phone: '', vertical: VERTICALS[0], reason: 'Dead Air', callDate: '', notes: '' })
+    setF({ clientId: '', callId: '', phone: '', vertical: crm.verticals[0] || '', reason: 'Dead Air', callDate: '', notes: '' })
     setErr('')
     flash('Return call logged. Vendor must be alerted within 24 hours.')
     navigate('returns')
@@ -327,7 +355,7 @@ function ReturnForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
       <div className="db-field-row">
         <Field label="Vertical">
           <select className="db-input" value={f.vertical} onChange={e => setF(p => ({ ...p, vertical: e.target.value }))}>
-            {VERTICALS.map(v => <option key={v}>{v}</option>)}
+            {crm.verticals.map(v => <option key={v}>{v}</option>)}
           </select>
         </Field>
         <Field label="Call Date">
@@ -406,18 +434,30 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
 function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
   const [f, setF] = useState({ buyer: '', callerId: '', reason: '', vendor: '', date: '', reportingUpdated: false, vendorAlerted: false, notes: '' })
   const [err, setErr] = useState('')
+  const [newVendor, setNewVendor] = useState('')
   const fmtDate = () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+  const buyerOptions = ['Both', ...crm.clients.map(c => c.name)]
+  const vendorOptions = ['Both', ...crm.vendors]
+
+  function addNewVendor() {
+    const val = newVendor.trim()
+    if (!val) return
+    crm.addVendor(val)
+    setF(p => ({ ...p, vendor: val }))
+    setNewVendor('')
+  }
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (!f.buyer.trim())    { setErr('Buyer is required.'); return }
+    if (!f.buyer)           { setErr('Buyer is required.'); return }
     if (!f.callerId.trim()) { setErr('Caller ID is required.'); return }
     crm.addCallLog({
       date: f.date || fmtDate(),
-      buyer: f.buyer.trim(),
+      buyer: f.buyer,
       callerId: f.callerId.trim(),
       reason: f.reason.trim(),
-      vendor: f.vendor.trim(),
+      vendor: f.vendor,
       reportingUpdated: f.reportingUpdated,
       vendorAlerted: f.vendorAlerted,
       notes: f.notes,
@@ -434,7 +474,10 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
       {err && <p className="ne-error">{err}</p>}
       <div className="db-field-row">
         <Field label="Buyer / Client *">
-          <input className="db-input" placeholder="e.g. Elite Media" value={f.buyer} onChange={e => setF(p => ({ ...p, buyer: e.target.value }))} />
+          <select className="db-input" value={f.buyer} onChange={e => setF(p => ({ ...p, buyer: e.target.value }))}>
+            <option value="">— Select buyer —</option>
+            {buyerOptions.map(b => <option key={b}>{b}</option>)}
+          </select>
         </Field>
         <Field label="Caller ID *">
           <input className="db-input" placeholder="e.g. 16158281263" value={f.callerId} onChange={e => setF(p => ({ ...p, callerId: e.target.value }))} />
@@ -445,7 +488,20 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
       </Field>
       <div className="db-field-row">
         <Field label="Vendor">
-          <input className="db-input" placeholder="e.g. RNT Winkels" value={f.vendor} onChange={e => setF(p => ({ ...p, vendor: e.target.value }))} />
+          <select className="db-input" value={f.vendor} onChange={e => setF(p => ({ ...p, vendor: e.target.value }))}>
+            <option value="">— Select vendor —</option>
+            {vendorOptions.map(v => <option key={v}>{v}</option>)}
+          </select>
+          <div className="ne-add-vertical" style={{ marginTop: 6 }}>
+            <input
+              className="db-input"
+              placeholder="Add new vendor…"
+              value={newVendor}
+              onChange={e => setNewVendor(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addNewVendor() } }}
+            />
+            <button type="button" className="db-btn db-btn-ghost" onClick={addNewVendor}>Add</button>
+          </div>
         </Field>
         <Field label="Date">
           <input className="db-input" placeholder={fmtDate()} value={f.date} onChange={e => setF(p => ({ ...p, date: e.target.value }))} />

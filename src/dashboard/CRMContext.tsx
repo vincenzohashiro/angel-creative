@@ -7,6 +7,7 @@ import {
   KEYS, load, save,
   SEED_CLIENTS, SEED_INVOICES, SEED_CAMPAIGNS,
   SEED_RETURNS, SEED_TASKS, SEED_ISSUES, SEED_CALLLOGS,
+  DEFAULT_VERTICALS, DEFAULT_VENDORS,
 } from './store'
 
 type Ctx = {
@@ -17,6 +18,8 @@ type Ctx = {
   tasks:     Task[]
   issues:    Issue[]
   calllogs:  CallLog[]
+  verticals: string[]
+  vendors:   string[]
 
   // Clients
   addClient:          (d: Omit<Client, 'id' | 'pending' | 'notes'>) => void
@@ -56,18 +59,30 @@ type Ctx = {
   updateCallLog:      (id: string, d: Partial<CallLog>) => void
   removeCallLog:      (id: string) => void
   clearCallLogs:      () => void
+
+  // Verticals / Vendors
+  addVertical:        (v: string) => void
+  addVendor:          (v: string) => void
 }
 
 const CRMContext = createContext<Ctx | null>(null)
 
 export function CRMProvider({ children }: { children: ReactNode }) {
-  const [clients,   setClients]   = useState<Client[]>   (() => load(KEYS.clients,   SEED_CLIENTS))
+  const [clients,   setClients]   = useState<Client[]>   (() => {
+    const raw = load<any[]>(KEYS.clients, SEED_CLIENTS)
+    return raw.map((c: any) => ({
+      ...c,
+      verticals: Array.isArray(c.verticals) ? c.verticals : c.vertical ? [c.vertical] : [],
+    }))
+  })
   const [invoices,  setInvoices]  = useState<Invoice[]>  (() => load(KEYS.invoices,  SEED_INVOICES))
   const [campaigns, setCampaigns] = useState<Campaign[]> (() => load(KEYS.campaigns, SEED_CAMPAIGNS))
   const [returns,   setReturns]   = useState<ReturnCall[]>(() => load(KEYS.returns,  SEED_RETURNS))
   const [tasks,     setTasks]     = useState<Task[]>     (() => load(KEYS.tasks,     SEED_TASKS))
   const [issues,    setIssues]    = useState<Issue[]>    (() => load(KEYS.issues,    SEED_ISSUES))
   const [calllogs,  setCalllogs]  = useState<CallLog[]>  (() => load(KEYS.calllogs,  SEED_CALLLOGS))
+  const [verticals, setVerticals] = useState<string[]>  (() => load(KEYS.verticals, DEFAULT_VERTICALS))
+  const [vendors,   setVendors]   = useState<string[]>  (() => load(KEYS.vendors,   DEFAULT_VENDORS))
 
   useEffect(() => { save(KEYS.clients,   clients)   }, [clients])
   useEffect(() => { save(KEYS.invoices,  invoices)  }, [invoices])
@@ -76,6 +91,8 @@ export function CRMProvider({ children }: { children: ReactNode }) {
   useEffect(() => { save(KEYS.tasks,     tasks)     }, [tasks])
   useEffect(() => { save(KEYS.issues,    issues)    }, [issues])
   useEffect(() => { save(KEYS.calllogs,  calllogs)  }, [calllogs])
+  useEffect(() => { save(KEYS.verticals, verticals) }, [verticals])
+  useEffect(() => { save(KEYS.vendors,   vendors)   }, [vendors])
 
   const uid = () => crypto.randomUUID()
   const today = () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -172,9 +189,19 @@ export function CRMProvider({ children }: { children: ReactNode }) {
 
   const clearCallLogs = () => setCalllogs([])
 
+  const addVertical = (v: string) => {
+    const val = v.trim()
+    if (val && !verticals.includes(val)) setVerticals(p => [...p, val])
+  }
+
+  const addVendor = (v: string) => {
+    const val = v.trim()
+    if (val && !vendors.includes(val)) setVendors(p => [...p, val])
+  }
+
   return (
     <CRMContext.Provider value={{
-      clients, invoices, campaigns, returns, tasks, issues, calllogs,
+      clients, invoices, campaigns, returns, tasks, issues, calllogs, verticals, vendors,
       addClient, updateClient, removeClient, setClientPending, setClientNotes,
       addInvoice, updateInvoice, removeInvoice,
       addCampaign, updateCampaign, removeCampaign,
@@ -182,6 +209,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
       addTask, updateTask, removeTask,
       addIssue, updateIssue, removeIssue,
       addCallLog, updateCallLog, removeCallLog, clearCallLogs,
+      addVertical, addVendor,
     }}>
       {children}
     </CRMContext.Provider>
