@@ -160,7 +160,7 @@ export default function CallLog() {
           <button className="db-btn db-btn-ghost" onClick={() => setShowConfig(true)} title="Configure Google Sheet URL">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="2" stroke="currentColor" strokeWidth="1.4"/><path d="M6.5 1v1.5M6.5 10.5V12M12 6.5h-1.5M2.5 6.5H1M10.1 2.9l-1.06 1.06M3.96 9.04L2.9 10.1M10.1 10.1L9.04 9.04M3.96 3.96L2.9 2.9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
           </button>
-          <button className="db-btn" onClick={syncFromSheet} disabled={syncing}>
+          <button className="db-btn" onClick={() => syncFromSheet()} disabled={syncing}>
             {syncing
               ? <span className="cl-spin">↻</span>
               : <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M11 2.5A5.5 5.5 0 1 0 12 6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M12 1v3h-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -208,7 +208,7 @@ export default function CallLog() {
         {filtered.length === 0 ? (
           <div className="db-empty">
             <p>No call logs yet.</p>
-            <button className="db-btn db-btn-ghost" onClick={syncFromSheet}>Sync from Google Sheet</button>
+            <button className="db-btn db-btn-ghost" onClick={() => syncFromSheet()}>Sync from Google Sheet</button>
           </div>
         ) : (
           <div className="db-scroll">

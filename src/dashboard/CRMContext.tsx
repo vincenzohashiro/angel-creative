@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import type {
   Client, Invoice, Campaign, ReturnCall, Task, Issue, CallLog,
   PendingItem, ClientNote,
@@ -162,7 +162,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
   // ── Call Logs ────────────────────────────────────────────────────────────
 
   const addCallLog = (d: Omit<CallLog, 'id' | 'loggedAt'>) =>
-    setCalllogs(p => [{ source: 'Manual', ...d, id: uid(), loggedAt: Date.now() }, ...p])
+    setCalllogs(p => [{ id: uid(), loggedAt: Date.now(), ...d }, ...p])
 
   const updateCallLog = (id: string, d: Partial<CallLog>) =>
     setCalllogs(p => p.map(l => l.id === id ? { ...l, ...d } : l))
