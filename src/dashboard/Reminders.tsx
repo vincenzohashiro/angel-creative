@@ -75,7 +75,8 @@ function ReminderCard({ reminder: r, crm }: { reminder: Reminder; crm: ReturnTyp
         {done ? '✓' : ''}
       </button>
       <div className="rm-card-body">
-        <p className="rm-text">{r.text}</p>
+        <p className="rm-title">{r.title}</p>
+        {r.text && <p className="rm-text">{r.text}</p>}
         <div className="rm-meta">
           {r.tag && <span className="rm-card-tag">{r.tag}</span>}
           <span className="rm-date">{done ? `Done ${r.doneAt}` : r.createdAt}</span>

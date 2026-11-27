@@ -261,7 +261,7 @@ function RecentPanel({ tab, crm }: { tab: Tab; crm: CRM }) {
           {items.map(r => (
             <div key={r.id} className="ne-recent-row">
               <div className="ne-recent-main">
-                <div className="ne-recent-name">{r.text}</div>
+                <div className="ne-recent-name">{r.title}</div>
                 <div className="ne-recent-sub">{r.tag || 'No tag'} · {r.createdAt}</div>
               </div>
             </div>
@@ -897,14 +897,16 @@ function IssueForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => v
 // ── Reminder form ──────────────────────────────────────────────────────────
 
 function ReminderForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
-  const [text, setText] = useState('')
-  const [tag,  setTag]  = useState('')
-  const [err,  setErr]  = useState('')
+  const [title, setTitle] = useState('')
+  const [text,  setText]  = useState('')
+  const [tag,   setTag]   = useState('')
+  const [err,   setErr]   = useState('')
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (!text.trim()) { setErr('Reminder text is required.'); return }
-    crm.addReminder(text.trim(), tag.trim())
+    if (!title.trim()) { setErr('Title is required.'); return }
+    crm.addReminder(title.trim(), text.trim(), tag.trim())
+    setTitle('')
     setText('')
     setTag('')
     setErr('')
@@ -915,14 +917,16 @@ function ReminderForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
   return (
     <form className="ne-form" onSubmit={submit}>
       {err && <p className="ne-error">{err}</p>}
-      <Field label="Reminder *" className="ne-span-full ne-grow">
+      <Field label="Title *" className="ne-span-full">
+        <input className="db-input" value={title} onChange={e => setTitle(e.target.value)} autoFocus />
+      </Field>
+      <Field label="Note (optional)" className="ne-span-full ne-grow">
         <textarea
           className="db-input"
           rows={3}
           value={text}
           onChange={e => setText(e.target.value)}
           style={{ resize: 'none' }}
-          autoFocus
         />
       </Field>
       <Field label="Tag (optional)">

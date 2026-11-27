@@ -62,7 +62,7 @@ type Ctx = {
   clearCallLogs:      () => void
 
   // Reminders
-  addReminder:        (text: string, tag: string) => void
+  addReminder:        (title: string, text: string, tag: string) => void
   toggleReminder:     (id: string) => void
   removeReminder:     (id: string) => void
 
@@ -200,8 +200,8 @@ export function CRMProvider({ children }: { children: ReactNode }) {
 
   const clearCallLogs = () => setCalllogs([])
 
-  const addReminder = (text: string, tag: string) =>
-    setReminders(p => [{ id: uid(), text, tag, createdAt: today(), doneAt: '' }, ...p])
+  const addReminder = (title: string, text: string, tag: string) =>
+    setReminders(p => [{ id: uid(), title, text, tag, createdAt: today(), doneAt: '' }, ...p])
 
   const toggleReminder = (id: string) =>
     setReminders(p => p.map(r => r.id === id
