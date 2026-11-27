@@ -31,7 +31,7 @@ export default function NewEntry({ navigate }: { navigate: (v: View) => void }) 
   }
 
   return (
-    <>
+    <div className="ne-page">
       <div className="db-view-head">
         <div>
           <h1 className="db-view-title">New Entry</h1>
@@ -68,7 +68,7 @@ export default function NewEntry({ navigate }: { navigate: (v: View) => void }) 
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
