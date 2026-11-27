@@ -132,3 +132,11 @@ export type Issue = {
   resolvedAt: string
   resolution: string
 }
+
+export type Reminder = {
+  id: string
+  text: string
+  tag: string
+  createdAt: string
+  doneAt: string
+}

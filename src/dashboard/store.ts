@@ -10,6 +10,7 @@ export const KEYS = {
   calllogs:  'ac_crm_calllogs_v1',
   verticals: 'ac_crm_verticals_v1',
   vendors:   'ac_crm_vendors_v1',
+  reminders: 'ac_crm_reminders_v1',
 }
 
 export const DEFAULT_VERTICALS = ['Auto Insurance','Debt Settlement','Health','Home Insurance','Home Services','Personal Finance','Pet Insurance','Solar','Other']

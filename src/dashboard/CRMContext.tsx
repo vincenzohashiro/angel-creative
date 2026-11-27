@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import type {
-  Client, Invoice, Campaign, ReturnCall, Task, Issue, CallLog,
+  Client, Invoice, Campaign, ReturnCall, Task, Issue, CallLog, Reminder,
   PendingItem, ClientNote,
 } from './types'
 import {
@@ -18,6 +18,7 @@ type Ctx = {
   tasks:     Task[]
   issues:    Issue[]
   calllogs:  CallLog[]
+  reminders: Reminder[]
   verticals: string[]
   vendors:   string[]
 
@@ -60,6 +61,11 @@ type Ctx = {
   removeCallLog:      (id: string) => void
   clearCallLogs:      () => void
 
+  // Reminders
+  addReminder:        (text: string, tag: string) => void
+  toggleReminder:     (id: string) => void
+  removeReminder:     (id: string) => void
+
   // Verticals / Vendors
   addVertical:        (v: string) => void
   addVendor:          (v: string) => void
@@ -81,6 +87,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
   const [tasks,     setTasks]     = useState<Task[]>     (() => load(KEYS.tasks,     SEED_TASKS))
   const [issues,    setIssues]    = useState<Issue[]>    (() => load(KEYS.issues,    SEED_ISSUES))
   const [calllogs,  setCalllogs]  = useState<CallLog[]>  (() => load(KEYS.calllogs,  SEED_CALLLOGS))
+  const [reminders, setReminders] = useState<Reminder[]>(() => load(KEYS.reminders, []))
   const [verticals, setVerticals] = useState<string[]>  (() => load(KEYS.verticals, DEFAULT_VERTICALS))
   const [vendors,   setVendors]   = useState<string[]>  (() => load(KEYS.vendors,   DEFAULT_VENDORS))
 
@@ -91,6 +98,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
   useEffect(() => { save(KEYS.tasks,     tasks)     }, [tasks])
   useEffect(() => { save(KEYS.issues,    issues)    }, [issues])
   useEffect(() => { save(KEYS.calllogs,  calllogs)  }, [calllogs])
+  useEffect(() => { save(KEYS.reminders, reminders) }, [reminders])
   useEffect(() => { save(KEYS.verticals, verticals) }, [verticals])
   useEffect(() => { save(KEYS.vendors,   vendors)   }, [vendors])
 
@@ -192,6 +200,17 @@ export function CRMProvider({ children }: { children: ReactNode }) {
 
   const clearCallLogs = () => setCalllogs([])
 
+  const addReminder = (text: string, tag: string) =>
+    setReminders(p => [{ id: uid(), text, tag, createdAt: today(), doneAt: '' }, ...p])
+
+  const toggleReminder = (id: string) =>
+    setReminders(p => p.map(r => r.id === id
+      ? { ...r, doneAt: r.doneAt ? '' : today() }
+      : r))
+
+  const removeReminder = (id: string) =>
+    setReminders(p => p.filter(r => r.id !== id))
+
   const addVertical = (v: string) => {
     const val = v.trim()
     if (val && !verticals.includes(val)) setVerticals(p => [...p, val])
@@ -204,7 +223,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
 
   return (
     <CRMContext.Provider value={{
-      clients, invoices, campaigns, returns, tasks, issues, calllogs, verticals, vendors,
+      clients, invoices, campaigns, returns, tasks, issues, calllogs, reminders, verticals, vendors,
       addClient, updateClient, removeClient, setClientPending, setClientNotes,
       addInvoice, updateInvoice, removeInvoice,
       addCampaign, updateCampaign, removeCampaign,
@@ -212,6 +231,7 @@ export function CRMProvider({ children }: { children: ReactNode }) {
       addTask, updateTask, removeTask,
       addIssue, updateIssue, removeIssue,
       addCallLog, updateCallLog, removeCallLog, clearCallLogs,
+      addReminder, toggleReminder, removeReminder,
       addVertical, addVendor,
     }}>
       {children}

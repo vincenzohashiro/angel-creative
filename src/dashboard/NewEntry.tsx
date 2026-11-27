@@ -4,7 +4,7 @@ import type { View } from './Dashboard'
 import type { ClientStatus, InvoiceStatus, CampaignStatus, ReturnReason, Priority, TaskStatus, IssueStatus } from './types'
 import './NewEntry.css'
 
-type Tab = 'client' | 'invoice' | 'campaign' | 'return' | 'calllog' | 'task' | 'issue'
+type Tab = 'client' | 'invoice' | 'campaign' | 'return' | 'calllog' | 'task' | 'issue' | 'reminder'
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'client',   label: 'Client'      },
@@ -14,6 +14,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'calllog',  label: 'Call Log'    },
   { id: 'task',     label: 'Task'        },
   { id: 'issue',    label: 'Issue'       },
+  { id: 'reminder', label: 'Reminder'    },
 ]
 
 const RETURN_REASONS: ReturnReason[] = ['Dead Air','Customer Service','Wrong Number','Duplicate','Under Duration','Other']
@@ -57,6 +58,7 @@ export default function NewEntry({ navigate }: { navigate: (v: View) => void }) 
           {tab === 'calllog'  && <CallLogForm   crm={crm} flash={flash} navigate={navigate} />}
           {tab === 'task'     && <TaskForm     crm={crm} flash={flash} navigate={navigate} />}
           {tab === 'issue'    && <IssueForm    crm={crm} flash={flash} navigate={navigate} />}
+          {tab === 'reminder' && <ReminderForm crm={crm} flash={flash} navigate={navigate} />}
         </div>
       </div>
     </>
@@ -691,6 +693,47 @@ function IssueForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => v
       </Field>
       <div className="db-form-actions">
         <button type="submit" className="db-btn">Log Issue</button>
+      </div>
+    </form>
+  )
+}
+
+// ── Reminder form ──────────────────────────────────────────────────────────
+
+function ReminderForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
+  const [text, setText] = useState('')
+  const [tag,  setTag]  = useState('')
+  const [err,  setErr]  = useState('')
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!text.trim()) { setErr('Reminder text is required.'); return }
+    crm.addReminder(text.trim(), tag.trim())
+    setText('')
+    setTag('')
+    setErr('')
+    flash('Reminder saved.')
+    navigate('reminders')
+  }
+
+  return (
+    <form className="ne-form" onSubmit={submit}>
+      {err && <p className="ne-error">{err}</p>}
+      <Field label="Reminder *">
+        <textarea
+          className="db-input"
+          rows={3}
+          value={text}
+          onChange={e => setText(e.target.value)}
+          style={{ resize: 'vertical' }}
+          autoFocus
+        />
+      </Field>
+      <Field label="Tag (optional)">
+        <input className="db-input" value={tag} onChange={e => setTag(e.target.value)} />
+      </Field>
+      <div className="db-form-actions">
+        <button type="submit" className="db-btn">Save Reminder</button>
       </div>
     </form>
   )

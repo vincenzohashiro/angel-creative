@@ -10,12 +10,13 @@ import Returns from './Returns'
 import Tasks from './Tasks'
 import Issues from './Issues'
 import CallLog from './CallLog'
+import Reminders from './Reminders'
 import './Dashboard.css'
 
 export type View =
   | 'home' | 'new-entry'
   | 'clients' | 'billing' | 'callgrid' | 'returns' | 'calllog'
-  | 'tasks' | 'issues'
+  | 'tasks' | 'issues' | 'reminders'
 
 type NavItem = { id: View; label: string; icon: React.ReactElement }
 
@@ -45,8 +46,9 @@ const SECTIONS: { heading: string; items: NavItem[] }[] = [
   {
     heading: 'Tracking',
     items: [
-      { id: 'tasks',  label: 'Tasks',  icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.4"/><path d="M4.5 7.5l2 2 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> },
-      { id: 'issues', label: 'Issues', icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5L13.5 13H1.5L7.5 1.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/><path d="M7.5 6v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><circle cx="7.5" cy="11" r="0.75" fill="currentColor"/></svg> },
+      { id: 'tasks',     label: 'Tasks',     icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.4"/><path d="M4.5 7.5l2 2 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> },
+      { id: 'issues',    label: 'Issues',    icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5L13.5 13H1.5L7.5 1.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/><path d="M7.5 6v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><circle cx="7.5" cy="11" r="0.75" fill="currentColor"/></svg> },
+      { id: 'reminders', label: 'Reminders', icon: <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5a4.5 4.5 0 0 1 4.5 4.5c0 2.5-1 4-1 5H4s-1-2.5-1-5a4.5 4.5 0 0 1 4.5-4.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/><path d="M6 11v.5a1.5 1.5 0 0 0 3 0V11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg> },
     ],
   },
 ]
@@ -120,6 +122,7 @@ export default function Dashboard() {
             {view === 'calllog'   && <CallLog   />}
             {view === 'tasks'     && <Tasks     />}
             {view === 'issues'    && <Issues    />}
+            {view === 'reminders' && <Reminders />}
           </main>
         </div>
       </div>
