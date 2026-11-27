@@ -705,8 +705,8 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
       <Field label="Title *" className="ne-span-full">
         <input className="db-input" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
       </Field>
-      <Field label="Description" className="ne-span-full">
-        <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
+      <Field label="Description" className="ne-span-full ne-grow">
+        <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'none' }} />
       </Field>
       <div className="db-field-row">
         <Field label="Client (optional)">
@@ -869,8 +869,8 @@ function IssueForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => v
       <Field label="Title *" className="ne-span-full">
         <input className="db-input" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
       </Field>
-      <Field label="Description" className="ne-span-full">
-        <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
+      <Field label="Description" className="ne-span-full ne-grow">
+        <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'none' }} />
       </Field>
       <div className="db-field-row">
         <Field label="Client (optional)">
@@ -915,13 +915,13 @@ function ReminderForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
   return (
     <form className="ne-form" onSubmit={submit}>
       {err && <p className="ne-error">{err}</p>}
-      <Field label="Reminder *" className="ne-span-full">
+      <Field label="Reminder *" className="ne-span-full ne-grow">
         <textarea
           className="db-input"
           rows={3}
           value={text}
           onChange={e => setText(e.target.value)}
-          style={{ resize: 'vertical' }}
+          style={{ resize: 'none' }}
           autoFocus
         />
       </Field>

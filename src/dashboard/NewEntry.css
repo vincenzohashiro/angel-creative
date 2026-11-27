@@ -82,6 +82,8 @@
   padding: 14px;
   border-right: 1px solid var(--line);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Recent panel ─────────────────────────────────── */
@@ -89,6 +91,8 @@
 .ne-recent-panel {
   padding: 14px 16px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .ne-recent-heading {
@@ -104,6 +108,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
+  flex: 1;
 }
 
 .ne-recent-row {
@@ -201,6 +206,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   align-items: start;
+  align-content: space-between;
+  flex: 1;
 }
 
 /* Row wrappers become invisible to grid — children become grid items */
@@ -213,6 +220,10 @@
 
 /* Full-span helper */
 .ne-span-full { grid-column: 1 / -1; }
+
+/* Textareas in full-span fields grow to fill remaining space */
+.ne-span-full.ne-grow { flex: 1; display: flex; flex-direction: column; }
+.ne-span-full.ne-grow textarea.db-input { flex: 1; resize: none; }
 
 /* Comfortable field sizing scoped to New Entry forms only */
 .ne-form .db-field      { gap: 4px; }
