@@ -22,7 +22,7 @@ type Ctx = {
   vendors:   string[]
 
   // Clients
-  addClient:          (d: Omit<Client, 'id' | 'pending' | 'notes'>) => void
+  addClient:          (d: Omit<Client, 'id' | 'pending' | 'notes'>) => string
   updateClient:       (id: string, d: Partial<Client>) => void
   removeClient:       (id: string) => void
   setClientPending:   (clientId: string, items: PendingItem[]) => void
@@ -99,8 +99,11 @@ export function CRMProvider({ children }: { children: ReactNode }) {
 
   // ── Clients ──────────────────────────────────────────────────────────────
 
-  const addClient = (d: Omit<Client, 'id' | 'pending' | 'notes'>) =>
-    setClients(p => [{ ...d, id: uid(), pending: [], notes: [] }, ...p])
+  const addClient = (d: Omit<Client, 'id' | 'pending' | 'notes'>) => {
+    const newId = uid()
+    setClients(p => [{ ...d, id: newId, pending: [], notes: [] }, ...p])
+    return newId
+  }
 
   const updateClient = (id: string, d: Partial<Client>) =>
     setClients(p => p.map(c => c.id === id ? { ...c, ...d } : c))

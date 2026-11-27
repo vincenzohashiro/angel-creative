@@ -76,12 +76,77 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
+// Legacy dropdown — kept for Invoice / Campaign / Return / Issue forms
 function ClientSelect({ crm, value, onChange }: { crm: CRM; value: string; onChange: (v: string) => void }) {
   return (
     <select className="db-input" value={value} onChange={e => onChange(e.target.value)}>
       <option value="">— No client —</option>
       {crm.clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
     </select>
+  )
+}
+
+// Combobox — type to filter, creates new client if name not found
+function ClientCombobox({
+  crm, clientId, clientNameInput, onSelect,
+}: {
+  crm: CRM
+  clientId: string
+  clientNameInput: string
+  onSelect: (id: string, name: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+
+  const suggestions = crm.clients.filter(c =>
+    !clientNameInput.trim() ? true : c.name.toLowerCase().includes(clientNameInput.toLowerCase())
+  ).slice(0, 8)
+
+  const exactMatch = crm.clients.find(
+    c => c.name.toLowerCase() === clientNameInput.trim().toLowerCase()
+  )
+  const isNew = clientNameInput.trim() && !exactMatch
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <input
+        className="db-input"
+        value={clientNameInput}
+        autoComplete="off"
+        onChange={e => {
+          const val = e.target.value
+          const match = crm.clients.find(c => c.name.toLowerCase() === val.trim().toLowerCase())
+          onSelect(match ? match.id : '', val)
+        }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 180)}
+      />
+      {open && (
+        <div className="cb-dropdown">
+          <div className="cb-option cb-clear" onMouseDown={() => { onSelect('', ''); setOpen(false) }}>— No client —</div>
+          {suggestions.map(c => (
+            <div
+              key={c.id}
+              className={`cb-option${c.id === clientId ? ' is-selected' : ''}`}
+              onMouseDown={() => { onSelect(c.id, c.name); setOpen(false) }}
+            >
+              {c.name}
+            </div>
+          ))}
+          {isNew && (
+            <div className="cb-new">
+              <span>✚ Create "{clientNameInput.trim()}"</span>
+              <span style={{ fontSize: 10, opacity: 0.7 }}>Saved on submit</span>
+            </div>
+          )}
+        </div>
+      )}
+      {!open && exactMatch && clientNameInput && (
+        <p className="cb-hint-match">Client exists</p>
+      )}
+      {!open && isNew && (
+        <p className="cb-hint-new">New client — will be added on save</p>
+      )}
+    </div>
   )
 }
 
@@ -375,7 +440,11 @@ function ReturnForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
 // ── Task form ──────────────────────────────────────────────────────────────
 
 function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => void; navigate: (v: View) => void }) {
-  const [f, setF] = useState({ title: '', description: '', clientId: '', priority: 'Medium' as Priority, status: 'Open' as TaskStatus, dueDate: '' })
+  const [f, setF] = useState({
+    title: '', description: '',
+    clientId: '', clientNameInput: '',
+    priority: 'Medium' as Priority, status: 'Open' as TaskStatus, dueDate: '',
+  })
   const [err, setErr] = useState('')
 
   function writeToSheet(title: string, description: string, clientName: string, priority: string, dueDate: string, status: string) {
@@ -395,17 +464,38 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
   function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!f.title.trim()) { setErr('Title is required.'); return }
-    const client = crm.clients.find(c => c.id === f.clientId)
-    const clientName = client?.name || ''
+
+    let clientId = f.clientId
+    let clientName = ''
+
+    if (clientId) {
+      clientName = crm.clients.find(c => c.id === clientId)?.name || f.clientNameInput
+    } else if (f.clientNameInput.trim()) {
+      const existing = crm.clients.find(c => c.name.toLowerCase() === f.clientNameInput.trim().toLowerCase())
+      if (existing) {
+        clientId = existing.id
+        clientName = existing.name
+      } else {
+        // Create new minimal client
+        clientName = f.clientNameInput.trim()
+        clientId = crm.addClient({
+          name: clientName, contact: '', email: '',
+          verticals: [], monthlyRev: 0,
+          status: 'Active', source: 'Manual',
+          since: today(), lastContact: today(), tags: [],
+        })
+      }
+    }
+
     crm.addTask({
       title: f.title.trim(), description: f.description.trim(),
-      clientId: f.clientId, clientName,
+      clientId, clientName,
       priority: f.priority, status: f.status, dueDate: f.dueDate, source: 'Manual',
     })
     writeToSheet(f.title.trim(), f.description.trim(), clientName, f.priority, f.dueDate, f.status)
-    setF({ title: '', description: '', clientId: '', priority: 'Medium', status: 'Open', dueDate: '' })
+    setF({ title: '', description: '', clientId: '', clientNameInput: '', priority: 'Medium', status: 'Open', dueDate: '' })
     setErr('')
-    flash('Task created.')
+    flash(clientId && !f.clientId && f.clientNameInput ? `Task created. "${clientName}" added to clients.` : 'Task created.')
     navigate('tasks')
   }
 
@@ -420,7 +510,12 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
       </Field>
       <div className="db-field-row">
         <Field label="Client (optional)">
-          <ClientSelect crm={crm} value={f.clientId} onChange={v => setF(p => ({ ...p, clientId: v }))} />
+          <ClientCombobox
+            crm={crm}
+            clientId={f.clientId}
+            clientNameInput={f.clientNameInput}
+            onSelect={(id, name) => setF(p => ({ ...p, clientId: id, clientNameInput: name }))}
+          />
         </Field>
         <Field label="Priority">
           <select className="db-input" value={f.priority} onChange={e => setF(p => ({ ...p, priority: e.target.value as Priority }))}>
