@@ -3,6 +3,7 @@ import { useCRM } from './CRMContext'
 import type { ClientStatus } from './types'
 import './Clients.css'
 
+
 type WorkspaceTab = 'pending' | 'notes' | 'info'
 
 const fmt = (n: number) => n > 0 ? '$' + n.toLocaleString('en-US') : '—'
@@ -60,6 +61,11 @@ export default function Clients() {
   const [filterStatus, setFilterStatus] = useState<ClientStatus | 'All'>('All')
   const [newPending, setNewPending] = useState('')
   const [newNote, setNewNote] = useState('')
+  const [editing, setEditing] = useState(false)
+  const [editForm, setEditForm] = useState<{
+    name: string; contact: string; email: string; verticals: string[];
+    monthlyRev: string; status: ClientStatus; tags: string;
+  } | null>(null)
 
   const filtered = useMemo(() => {
     return crm.clients.filter(c => {
@@ -77,7 +83,7 @@ export default function Clients() {
     const open = client.pending.filter(p => !p.done).length
     return (
       <div className="cl-detail">
-        <button className="cl-back" onClick={() => { setSelected(null); setTab('pending') }}>
+        <button className="cl-back" onClick={() => { setSelected(null); setTab('pending'); setEditing(false); setEditForm(null) }}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M9 11L5 7l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -104,7 +110,7 @@ export default function Clients() {
 
         <div className="cl-tabs">
           {(['pending', 'notes', 'info'] as WorkspaceTab[]).map(t => (
-            <button key={t} className={`cl-tab${tab === t ? ' is-active' : ''}`} onClick={() => setTab(t)}>
+            <button key={t} className={`cl-tab${tab === t ? ' is-active' : ''}`} onClick={() => { setTab(t); if (t !== 'info') { setEditing(false); setEditForm(null) } }}>
               {t === 'pending' ? `Pending${open > 0 ? ` (${open})` : ''}` : t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
@@ -170,24 +176,111 @@ export default function Clients() {
 
         {tab === 'info' && (
           <div className="cl-pane">
-            <div className="cl-info-grid">
-              {[
-                ['Verticals', client.verticals.join(', ') || '—'],
-                ['Monthly Revenue', fmt(client.monthlyRev)],
-                ['Status', client.status],
-                ['Source', client.source],
-                ['Contact', client.contact],
-                ['Email', client.email || '—'],
-                ['Client Since', client.since],
-                ['Last Contact', client.lastContact],
-                ['Tags', client.tags.join(', ') || '—'],
-              ].map(([label, value]) => (
-                <div key={label} className="cl-info-row">
-                  <span className="cl-info-label">{label}</span>
-                  <span className="cl-info-value">{value}</span>
+            {editing && editForm ? (
+              <form className="ne-form" onSubmit={e => {
+                e.preventDefault()
+                crm.updateClient(client.id, {
+                  name:       editForm.name.trim() || client.name,
+                  contact:    editForm.contact.trim(),
+                  email:      editForm.email.trim(),
+                  verticals:  editForm.verticals,
+                  monthlyRev: Number(editForm.monthlyRev) || 0,
+                  status:     editForm.status,
+                  tags:       editForm.tags.split(',').map(t => t.trim()).filter(Boolean),
+                  lastContact: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                })
+                setEditing(false)
+                setEditForm(null)
+              }}>
+                <div className="db-field-row">
+                  <div className="db-field">
+                    <label className="db-label">Name</label>
+                    <input className="db-input" value={editForm.name} onChange={e => setEditForm(p => p && ({ ...p, name: e.target.value }))} />
+                  </div>
+                  <div className="db-field">
+                    <label className="db-label">Status</label>
+                    <select className="db-input" value={editForm.status} onChange={e => setEditForm(p => p && ({ ...p, status: e.target.value as ClientStatus }))}>
+                      <option>Onboarding</option><option>Active</option><option>Inactive</option><option>At Risk</option>
+                    </select>
+                  </div>
                 </div>
-              ))}
-            </div>
+                <div className="db-field-row">
+                  <div className="db-field">
+                    <label className="db-label">Telegram / Contact</label>
+                    <input className="db-input" value={editForm.contact} onChange={e => setEditForm(p => p && ({ ...p, contact: e.target.value }))} />
+                  </div>
+                  <div className="db-field">
+                    <label className="db-label">Email</label>
+                    <input className="db-input" type="email" value={editForm.email} onChange={e => setEditForm(p => p && ({ ...p, email: e.target.value }))} />
+                  </div>
+                </div>
+                <div className="db-field">
+                  <label className="db-label">Monthly Revenue ($)</label>
+                  <input className="db-input" type="number" min="0" value={editForm.monthlyRev} onChange={e => setEditForm(p => p && ({ ...p, monthlyRev: e.target.value }))} />
+                </div>
+                <div className="db-field">
+                  <label className="db-label">Verticals</label>
+                  <div className="ne-vertical-grid">
+                    {crm.verticals.map(v => (
+                      <label key={v} className={`ne-vertical-chip${editForm.verticals.includes(v) ? ' is-checked' : ''}`}>
+                        <input type="checkbox" checked={editForm.verticals.includes(v)} onChange={() =>
+                          setEditForm(p => p && ({
+                            ...p,
+                            verticals: p.verticals.includes(v) ? p.verticals.filter(x => x !== v) : [...p.verticals, v],
+                          }))
+                        } />
+                        {v}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div className="db-field">
+                  <label className="db-label">Tags (comma-separated)</label>
+                  <input className="db-input" value={editForm.tags} onChange={e => setEditForm(p => p && ({ ...p, tags: e.target.value }))} />
+                </div>
+                <div className="db-form-actions">
+                  <button type="button" className="db-btn db-btn-ghost" onClick={() => { setEditing(false); setEditForm(null) }}>Cancel</button>
+                  <button type="submit" className="db-btn">Save Changes</button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <div className="cl-info-grid">
+                  {[
+                    ['Verticals', client.verticals.join(', ') || '—'],
+                    ['Monthly Revenue', fmt(client.monthlyRev)],
+                    ['Status', client.status],
+                    ['Source', client.source],
+                    ['Contact', client.contact],
+                    ['Email', client.email || '—'],
+                    ['Client Since', client.since],
+                    ['Last Contact', client.lastContact],
+                    ['Tags', client.tags.join(', ') || '—'],
+                  ].map(([label, value]) => (
+                    <div key={label} className="cl-info-row">
+                      <span className="cl-info-label">{label}</span>
+                      <span className="cl-info-value">{value}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 16 }}>
+                  <button className="db-btn" onClick={() => {
+                    setEditForm({
+                      name: client.name,
+                      contact: client.contact,
+                      email: client.email,
+                      verticals: [...client.verticals],
+                      monthlyRev: String(client.monthlyRev),
+                      status: client.status,
+                      tags: client.tags.join(', '),
+                    })
+                    setEditing(true)
+                  }}>
+                    Edit Client
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>

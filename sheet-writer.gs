@@ -37,6 +37,24 @@ function doPost(e) {
           break
         }
       }
+
+    } else if (data.action === 'append_task') {
+      var wb = SpreadsheetApp.openById(SHEET_ID)
+      var taskSheet = wb.getSheetByName('Tasks')
+      if (!taskSheet) {
+        taskSheet = wb.insertSheet('Tasks')
+        taskSheet.appendRow(['CreatedAt', 'Title', 'Description', 'ClientName', 'Priority', 'DueDate', 'Status'])
+        taskSheet.getRange(1, 1, 1, 7).setFontWeight('bold')
+      }
+      taskSheet.appendRow([
+        data.createdAt || '',
+        data.title || '',
+        data.description || '',
+        data.clientName || '',
+        data.priority || 'Medium',
+        data.dueDate || '',
+        data.status || 'Open'
+      ])
     }
 
     return reply('ok')

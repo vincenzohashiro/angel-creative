@@ -378,15 +378,31 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
   const [f, setF] = useState({ title: '', description: '', clientId: '', priority: 'Medium' as Priority, status: 'Open' as TaskStatus, dueDate: '' })
   const [err, setErr] = useState('')
 
+  function writeToSheet(title: string, description: string, clientName: string, priority: string, dueDate: string, status: string) {
+    try {
+      const scriptUrl = localStorage.getItem('ac_sheet_script_url') || ''
+      const secret    = localStorage.getItem('ac_sheet_script_secret') || ''
+      if (!scriptUrl) return
+      const createdAt = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({ secret, action: 'append_task', createdAt, title, description, clientName, priority, dueDate, status }),
+      }).catch(() => {})
+    } catch { /* noop */ }
+  }
+
   function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!f.title.trim()) { setErr('Title is required.'); return }
     const client = crm.clients.find(c => c.id === f.clientId)
+    const clientName = client?.name || ''
     crm.addTask({
       title: f.title.trim(), description: f.description.trim(),
-      clientId: f.clientId, clientName: client?.name || '',
+      clientId: f.clientId, clientName,
       priority: f.priority, status: f.status, dueDate: f.dueDate, source: 'Manual',
     })
+    writeToSheet(f.title.trim(), f.description.trim(), clientName, f.priority, f.dueDate, f.status)
     setF({ title: '', description: '', clientId: '', priority: 'Medium', status: 'Open', dueDate: '' })
     setErr('')
     flash('Task created.')
@@ -397,10 +413,10 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
     <form className="ne-form" onSubmit={submit}>
       {err && <p className="ne-error">{err}</p>}
       <Field label="Title *">
-        <input className="db-input" placeholder="What needs to be done?" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
+        <input className="db-input" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
       </Field>
       <Field label="Description">
-        <textarea className="db-input" rows={3} placeholder="More detail..." value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
+        <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
       </Field>
       <div className="db-field-row">
         <Field label="Client (optional)">
@@ -419,7 +435,7 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
           </select>
         </Field>
         <Field label="Due Date">
-          <input className="db-input" placeholder="e.g. Nov 10" value={f.dueDate} onChange={e => setF(p => ({ ...p, dueDate: e.target.value }))} />
+          <input className="db-input" value={f.dueDate} onChange={e => setF(p => ({ ...p, dueDate: e.target.value }))} />
         </Field>
       </div>
       <div className="db-form-actions">
