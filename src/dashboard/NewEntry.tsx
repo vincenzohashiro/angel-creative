@@ -195,7 +195,7 @@ function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
       {err && <p className="ne-error">{err}</p>}
       <div className="db-field-row">
         <Field label="Name / Company *">
-          <input className="db-input" required placeholder="e.g. Ifficient" value={f.name} onChange={e => setF(p => ({ ...p, name: e.target.value }))} />
+          <input className="db-input" required value={f.name} onChange={e => setF(p => ({ ...p, name: e.target.value }))} />
         </Field>
         <Field label="Status">
           <select className="db-input" value={f.status} onChange={e => setF(p => ({ ...p, status: e.target.value as ClientStatus }))}>
@@ -204,16 +204,21 @@ function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
         </Field>
       </div>
       <div className="db-field-row">
-        <Field label="Telegram / Contact">
-          <input className="db-input" placeholder="@username" value={f.contact} onChange={e => setF(p => ({ ...p, contact: e.target.value }))} />
+        <Field label="Contact / Telegram">
+          <input className="db-input" value={f.contact} onChange={e => setF(p => ({ ...p, contact: e.target.value }))} />
         </Field>
         <Field label="Email">
-          <input className="db-input" type="email" placeholder="email@company.com" value={f.email} onChange={e => setF(p => ({ ...p, email: e.target.value }))} />
+          <input className="db-input" type="email" value={f.email} onChange={e => setF(p => ({ ...p, email: e.target.value }))} />
         </Field>
       </div>
-      <Field label="Monthly Revenue ($)">
-        <input className="db-input" type="number" min="0" placeholder="0" value={f.monthlyRev} onChange={e => setF(p => ({ ...p, monthlyRev: e.target.value }))} />
-      </Field>
+      <div className="db-field-row">
+        <Field label="Monthly Revenue ($)">
+          <input className="db-input" type="number" min="0" value={f.monthlyRev} onChange={e => setF(p => ({ ...p, monthlyRev: e.target.value }))} />
+        </Field>
+        <Field label="Tags">
+          <input className="db-input" value={f.tags} onChange={e => setF(p => ({ ...p, tags: e.target.value }))} />
+        </Field>
+      </div>
       <Field label="Verticals">
         <div className="ne-vertical-grid">
           {crm.verticals.map(v => (
@@ -226,16 +231,13 @@ function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
         <div className="ne-add-vertical">
           <input
             className="db-input"
-            placeholder="Add new vertical…"
+            placeholder="New vertical…"
             value={newVertical}
             onChange={e => setNewVertical(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addNewVertical() } }}
           />
           <button type="button" className="db-btn db-btn-ghost" onClick={addNewVertical}>Add</button>
         </div>
-      </Field>
-      <Field label="Tags (comma-separated)">
-        <input className="db-input" placeholder="e.g. Priority, Auto, Solar" value={f.tags} onChange={e => setF(p => ({ ...p, tags: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
         <button type="submit" className="db-btn">Add Client</button>
@@ -275,15 +277,15 @@ function InvoiceForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
           <ClientSelect crm={crm} value={f.clientId} onChange={v => setF(p => ({ ...p, clientId: v }))} />
         </Field>
         <Field label="Amount ($) *">
-          <input className="db-input" type="number" min="0" placeholder="0" value={f.amount} onChange={e => setF(p => ({ ...p, amount: e.target.value }))} />
+          <input className="db-input" type="number" min="0" value={f.amount} onChange={e => setF(p => ({ ...p, amount: e.target.value }))} />
         </Field>
       </div>
       <div className="db-field-row">
         <Field label="Issue Date">
-          <input className="db-input" placeholder={today()} value={f.issued} onChange={e => setF(p => ({ ...p, issued: e.target.value }))} />
+          <input className="db-input" value={f.issued} onChange={e => setF(p => ({ ...p, issued: e.target.value }))} />
         </Field>
         <Field label="Due Date">
-          <input className="db-input" placeholder="e.g. Nov 15" value={f.due} onChange={e => setF(p => ({ ...p, due: e.target.value }))} />
+          <input className="db-input" value={f.due} onChange={e => setF(p => ({ ...p, due: e.target.value }))} />
         </Field>
       </div>
       <div className="db-field-row">
@@ -297,7 +299,7 @@ function InvoiceForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
         </Field>
       </div>
       <Field label="Notes">
-        <input className="db-input" placeholder="Optional notes..." value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
+        <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
         <button type="submit" className="db-btn">Create Invoice</button>
@@ -337,7 +339,7 @@ function CampaignForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
           <ClientSelect crm={crm} value={f.clientId} onChange={v => setF(p => ({ ...p, clientId: v }))} />
         </Field>
         <Field label="Campaign Name *">
-          <input className="db-input" placeholder="e.g. IFF-Auto-Nov" value={f.name} onChange={e => setF(p => ({ ...p, name: e.target.value }))} />
+          <input className="db-input" value={f.name} onChange={e => setF(p => ({ ...p, name: e.target.value }))} />
         </Field>
       </div>
       <div className="db-field-row">
@@ -354,14 +356,14 @@ function CampaignForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
       </div>
       <div className="db-field-row">
         <Field label="Total Calls">
-          <input className="db-input" type="number" min="0" placeholder="0" value={f.calls} onChange={e => setF(p => ({ ...p, calls: e.target.value }))} />
+          <input className="db-input" type="number" min="0" value={f.calls} onChange={e => setF(p => ({ ...p, calls: e.target.value }))} />
         </Field>
         <Field label="Connected">
-          <input className="db-input" type="number" min="0" placeholder="0" value={f.connected} onChange={e => setF(p => ({ ...p, connected: e.target.value }))} />
+          <input className="db-input" type="number" min="0" value={f.connected} onChange={e => setF(p => ({ ...p, connected: e.target.value }))} />
         </Field>
       </div>
       <Field label="Notes">
-        <input className="db-input" placeholder="Optional notes..." value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
+        <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
         <button type="submit" className="db-btn">Add Campaign</button>
@@ -411,10 +413,10 @@ function ReturnForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
       </div>
       <div className="db-field-row">
         <Field label="Phone Number *">
-          <input className="db-input" placeholder="(XXX) XXX-XXXX" value={f.phone} onChange={e => setF(p => ({ ...p, phone: e.target.value }))} />
+          <input className="db-input" value={f.phone} onChange={e => setF(p => ({ ...p, phone: e.target.value }))} />
         </Field>
         <Field label="Call ID">
-          <input className="db-input" placeholder="e.g. AC00" value={f.callId} onChange={e => setF(p => ({ ...p, callId: e.target.value }))} />
+          <input className="db-input" value={f.callId} onChange={e => setF(p => ({ ...p, callId: e.target.value }))} />
         </Field>
       </div>
       <div className="db-field-row">
@@ -424,11 +426,11 @@ function ReturnForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
           </select>
         </Field>
         <Field label="Call Date">
-          <input className="db-input" placeholder={today()} value={f.callDate} onChange={e => setF(p => ({ ...p, callDate: e.target.value }))} />
+          <input className="db-input" value={f.callDate} onChange={e => setF(p => ({ ...p, callDate: e.target.value }))} />
         </Field>
       </div>
       <Field label="Notes">
-        <input className="db-input" placeholder="Any additional context..." value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
+        <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
         <button type="submit" className="db-btn">Log Return Call</button>
@@ -591,11 +593,11 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
           </select>
         </Field>
         <Field label="Caller ID *">
-          <input className="db-input" placeholder="e.g. 16158281263" value={f.callerId} onChange={e => setF(p => ({ ...p, callerId: e.target.value }))} />
+          <input className="db-input" value={f.callerId} onChange={e => setF(p => ({ ...p, callerId: e.target.value }))} />
         </Field>
       </div>
       <Field label="Reason / Dispute Description">
-        <input className="db-input" placeholder="e.g. Buyer said it was a transfer on an inbound line" value={f.reason} onChange={e => setF(p => ({ ...p, reason: e.target.value }))} />
+        <input className="db-input" value={f.reason} onChange={e => setF(p => ({ ...p, reason: e.target.value }))} />
       </Field>
       <div className="db-field-row">
         <Field label="Vendor">
@@ -606,7 +608,7 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
           <div className="ne-add-vertical" style={{ marginTop: 6 }}>
             <input
               className="db-input"
-              placeholder="Add new vendor…"
+              placeholder="New vendor…"
               value={newVendor}
               onChange={e => setNewVendor(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addNewVendor() } }}
@@ -615,7 +617,7 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
           </div>
         </Field>
         <Field label="Date">
-          <input className="db-input" placeholder={fmtDate()} value={f.date} onChange={e => setF(p => ({ ...p, date: e.target.value }))} />
+          <input className="db-input" value={f.date} onChange={e => setF(p => ({ ...p, date: e.target.value }))} />
         </Field>
       </div>
       <div className="db-field-row">
@@ -633,7 +635,7 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
         </Field>
       </div>
       <Field label="Notes">
-        <input className="db-input" placeholder="Optional notes..." value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
+        <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
         <button type="submit" className="db-btn">Add to Call Log</button>
@@ -667,10 +669,10 @@ function IssueForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => v
     <form className="ne-form" onSubmit={submit}>
       {err && <p className="ne-error">{err}</p>}
       <Field label="Title *">
-        <input className="db-input" placeholder="Brief description of the issue" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
+        <input className="db-input" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
       </Field>
       <Field label="Description">
-        <textarea className="db-input" rows={3} placeholder="Full details..." value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
+        <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
       </Field>
       <div className="db-field-row">
         <Field label="Client (optional)">

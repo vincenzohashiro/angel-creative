@@ -44,13 +44,20 @@
 
 /* ── Form body ────────────────────────────────────── */
 
-.ne-body { padding: 24px; }
+.ne-body { padding: 18px 20px; }
 
 .ne-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
+
+/* Tighter field sizing scoped to New Entry forms only */
+.ne-form .db-field { gap: 3px; }
+.ne-form .db-label { font-size: 9px; letter-spacing: 0.08em; }
+.ne-form .db-input { padding: 7px 10px; font-size: 13px; }
+.ne-form .db-field-row { gap: 10px; }
+.ne-form .db-form-actions { padding-top: 6px; }
 
 /* ── SLA notice ───────────────────────────────────── */
 
@@ -164,24 +171,25 @@
 .ne-vertical-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 5px;
+  margin-bottom: 7px;
 }
 
 .ne-vertical-chip {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 11px;
-  border-radius: 20px;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 12px;
   border: 1px solid var(--line);
   background: var(--bg-deep);
   color: var(--fg-soft);
-  font-size: 11px;
+  font-size: 10px;
   font-family: var(--font-mono);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.12s, background 0.12s;
   user-select: none;
+  line-height: 1.6;
 }
 
 .ne-vertical-chip input[type="checkbox"] {
@@ -189,25 +197,28 @@
 }
 
 .ne-vertical-chip.is-checked {
-  border-color: var(--accent);
-  background: rgba(var(--accent-rgb, 60,130,246), 0.12);
-  color: var(--accent);
+  border-color: var(--red);
+  background: rgba(226,34,42,0.08);
+  color: var(--red);
 }
 
 .ne-vertical-chip:hover {
-  border-color: var(--accent);
+  border-color: var(--fg-dim);
+  color: var(--fg);
 }
 
 /* ── Add-vertical / add-vendor row ───────────────── */
 
 .ne-add-vertical {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 
 .ne-add-vertical .db-input {
   flex: 1;
+  font-size: 12px;
+  padding: 5px 9px;
 }
 
 @media (max-width: 480px) {
