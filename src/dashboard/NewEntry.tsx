@@ -51,14 +51,21 @@ export default function NewEntry({ navigate }: { navigate: (v: View) => void }) 
         </div>
 
         <div className="ne-body">
-          {tab === 'client'   && <ClientForm   crm={crm} flash={flash} navigate={navigate} />}
-          {tab === 'invoice'  && <InvoiceForm  crm={crm} flash={flash} navigate={navigate} />}
-          {tab === 'campaign' && <CampaignForm crm={crm} flash={flash} navigate={navigate} />}
-          {tab === 'return'   && <ReturnForm   crm={crm} flash={flash} navigate={navigate} />}
-          {tab === 'calllog'  && <CallLogForm   crm={crm} flash={flash} navigate={navigate} />}
-          {tab === 'task'     && <TaskForm     crm={crm} flash={flash} navigate={navigate} />}
-          {tab === 'issue'    && <IssueForm    crm={crm} flash={flash} navigate={navigate} />}
-          {tab === 'reminder' && <ReminderForm crm={crm} flash={flash} navigate={navigate} />}
+          <div className="ne-layout">
+            <div className="ne-form-panel">
+              {tab === 'client'   && <ClientForm   crm={crm} flash={flash} navigate={navigate} />}
+              {tab === 'invoice'  && <InvoiceForm  crm={crm} flash={flash} navigate={navigate} />}
+              {tab === 'campaign' && <CampaignForm crm={crm} flash={flash} navigate={navigate} />}
+              {tab === 'return'   && <ReturnForm   crm={crm} flash={flash} navigate={navigate} />}
+              {tab === 'calllog'  && <CallLogForm  crm={crm} flash={flash} navigate={navigate} />}
+              {tab === 'task'     && <TaskForm     crm={crm} flash={flash} navigate={navigate} />}
+              {tab === 'issue'    && <IssueForm    crm={crm} flash={flash} navigate={navigate} />}
+              {tab === 'reminder' && <ReminderForm crm={crm} flash={flash} navigate={navigate} />}
+            </div>
+            <div className="ne-recent-panel">
+              <RecentPanel tab={tab} crm={crm} />
+            </div>
+          </div>
         </div>
       </div>
     </>
@@ -76,6 +83,195 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       {children}
     </div>
   )
+}
+
+// ── Recent panel ───────────────────────────────────────────────────────────
+
+function Badge({ status }: { status: string }) {
+  const cls = status.toLowerCase().replace(/\s+/g, '-')
+  return <span className={`ne-recent-badge nr-${cls}`}>{status}</span>
+}
+
+function RecentPanel({ tab, crm }: { tab: Tab; crm: CRM }) {
+  if (tab === 'client') {
+    const items = crm.clients.slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Clients — {crm.clients.length} total</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No clients yet.</p> : (
+        <div className="ne-recent-list">
+          {items.map(c => (
+            <div key={c.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{c.name}</div>
+                <div className="ne-recent-sub">{c.verticals.join(', ') || '—'}</div>
+              </div>
+              <div className="ne-recent-right">
+                <Badge status={c.status} />
+                <span className="ne-recent-val">{c.since}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  if (tab === 'invoice') {
+    const items = crm.invoices.slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Invoices — {crm.invoices.length} total</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No invoices yet.</p> : (
+        <div className="ne-recent-list">
+          {items.map(i => (
+            <div key={i.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{i.ref} · {i.clientName}</div>
+                <div className="ne-recent-sub">Due {i.due || '—'}</div>
+              </div>
+              <div className="ne-recent-right">
+                <Badge status={i.status} />
+                <span className="ne-recent-val">${i.amount.toLocaleString()}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  if (tab === 'campaign') {
+    const items = crm.campaigns.slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Campaigns — {crm.campaigns.length} total</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No campaigns yet.</p> : (
+        <div className="ne-recent-list">
+          {items.map(c => (
+            <div key={c.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{c.name}</div>
+                <div className="ne-recent-sub">{c.clientName} · {c.vertical}</div>
+              </div>
+              <div className="ne-recent-right">
+                <Badge status={c.status} />
+                <span className="ne-recent-val">{c.calls.toLocaleString()} calls</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  if (tab === 'return') {
+    const items = crm.returns.slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Return Calls — {crm.returns.length} total</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No returns logged yet.</p> : (
+        <div className="ne-recent-list">
+          {items.map(r => (
+            <div key={r.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{r.phone}</div>
+                <div className="ne-recent-sub">{r.clientName} · {r.reason}</div>
+              </div>
+              <div className="ne-recent-right">
+                <Badge status={r.status} />
+                <span className="ne-recent-val">{r.callDate}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  if (tab === 'calllog') {
+    const items = crm.calllogs.slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Call Log — {crm.calllogs.length} entries</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No call logs yet.</p> : (
+        <div className="ne-recent-list">
+          {items.map(l => (
+            <div key={l.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{l.callerId}</div>
+                <div className="ne-recent-sub">{l.buyer} · {l.vendor}</div>
+              </div>
+              <div className="ne-recent-right">
+                <span className="ne-recent-val">{l.date}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  if (tab === 'task') {
+    const items = crm.tasks.filter(t => t.status !== 'Done').slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Active Tasks — {crm.tasks.filter(t => t.status !== 'Done').length}</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No active tasks.</p> : (
+        <div className="ne-recent-list">
+          {items.map(t => (
+            <div key={t.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{t.title}</div>
+                <div className="ne-recent-sub">{t.clientName || 'No client'} · Due {t.dueDate || '—'}</div>
+              </div>
+              <div className="ne-recent-right">
+                <Badge status={t.priority} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  if (tab === 'issue') {
+    const items = crm.issues.filter(i => i.status !== 'Resolved').slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Open Issues — {crm.issues.filter(i => i.status !== 'Resolved').length}</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No open issues.</p> : (
+        <div className="ne-recent-list">
+          {items.map(i => (
+            <div key={i.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{i.title}</div>
+                <div className="ne-recent-sub">{i.clientName || '—'}</div>
+              </div>
+              <div className="ne-recent-right">
+                <Badge status={i.priority} />
+                <Badge status={i.status} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  if (tab === 'reminder') {
+    const items = crm.reminders.filter(r => !r.doneAt).slice(0, 5)
+    return <>
+      <p className="ne-recent-heading">Active Reminders — {crm.reminders.filter(r => !r.doneAt).length}</p>
+      {items.length === 0 ? <p className="ne-recent-empty">No active reminders.</p> : (
+        <div className="ne-recent-list">
+          {items.map(r => (
+            <div key={r.id} className="ne-recent-row">
+              <div className="ne-recent-main">
+                <div className="ne-recent-name">{r.text}</div>
+                <div className="ne-recent-sub">{r.tag || 'No tag'} · {r.createdAt}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  }
+
+  return null
 }
 
 // Legacy dropdown — kept for Invoice / Campaign / Return / Issue forms

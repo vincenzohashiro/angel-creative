@@ -5,7 +5,6 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
-  max-width: 540px;
 }
 
 /* ── Tabs — compact wrapping pills ───────────────── */
@@ -49,9 +48,132 @@
   border-color: var(--red);
 }
 
-/* ── Form body ────────────────────────────────────── */
+/* ── Two-panel layout ─────────────────────────────── */
 
-.ne-body { padding: 12px 14px; }
+.ne-body { padding: 0; }
+
+.ne-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 440px) 1fr;
+  min-height: 300px;
+}
+
+.ne-form-panel {
+  padding: 14px;
+  border-right: 1px solid var(--line);
+}
+
+/* ── Recent panel ─────────────────────────────────── */
+
+.ne-recent-panel {
+  padding: 14px 16px;
+  overflow: hidden;
+}
+
+.ne-recent-heading {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin: 0 0 8px;
+}
+
+.ne-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ne-recent-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  background: var(--bg-deep);
+  border: 1px solid transparent;
+  transition: border-color 0.1s;
+}
+.ne-recent-row:hover { border-color: var(--line); }
+
+.ne-recent-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.ne-recent-name {
+  font-size: 12px;
+  color: var(--fg-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.ne-recent-sub {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--fg-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.ne-recent-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.ne-recent-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.nr-active      { background: rgba(74,158,94,0.14);  color: #7cc08a; }
+.nr-onboarding  { background: rgba(212,168,75,0.14); color: #d4a84b; }
+.nr-at-risk     { background: rgba(226,34,42,0.14);  color: var(--red); }
+.nr-inactive    { background: rgba(255,255,255,0.05); color: var(--fg-dim); }
+.nr-paid        { background: rgba(74,158,94,0.14);  color: #7cc08a; }
+.nr-outstanding { background: rgba(212,168,75,0.14); color: #d4a84b; }
+.nr-overdue     { background: rgba(226,34,42,0.14);  color: var(--red); }
+.nr-draft       { background: rgba(255,255,255,0.05); color: var(--fg-dim); }
+.nr-live        { background: rgba(74,158,94,0.14);  color: #7cc08a; }
+.nr-paused      { background: rgba(212,168,75,0.14); color: #d4a84b; }
+.nr-ended       { background: rgba(255,255,255,0.05); color: var(--fg-dim); }
+.nr-open        { background: rgba(255,255,255,0.05); color: var(--fg-dim); }
+.nr-in-progress { background: rgba(212,168,75,0.14); color: #d4a84b; }
+.nr-done        { background: rgba(74,158,94,0.14);  color: #7cc08a; }
+.nr-confirmed   { background: rgba(74,158,94,0.14);  color: #7cc08a; }
+.nr-alerted     { background: rgba(212,168,75,0.14); color: #d4a84b; }
+.nr-unalerted   { background: rgba(226,34,42,0.14);  color: var(--red); }
+.nr-high        { background: rgba(226,34,42,0.14);  color: var(--red); }
+.nr-medium      { background: rgba(212,168,75,0.14); color: #d4a84b; }
+.nr-low         { background: rgba(255,255,255,0.05); color: var(--fg-dim); }
+
+.ne-recent-val {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--fg-dim);
+}
+
+.ne-recent-empty {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-dim);
+  padding: 24px 0;
+}
+
+/* ── Form ─────────────────────────────────────────── */
 
 .ne-form {
   display: flex;
@@ -233,6 +355,8 @@
   font-size: 11px;
 }
 
-@media (max-width: 480px) {
-  .ne-body { padding: 10px 12px; }
+@media (max-width: 700px) {
+  .ne-layout { grid-template-columns: 1fr; }
+  .ne-recent-panel { border-top: 1px solid var(--line); border-right: none; }
+  .ne-form-panel { border-right: none; }
 }
