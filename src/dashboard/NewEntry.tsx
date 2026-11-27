@@ -76,9 +76,9 @@ export default function NewEntry({ navigate }: { navigate: (v: View) => void }) 
 
 type CRM = ReturnType<typeof useCRM>
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className="db-field">
+    <div className={`db-field${className ? ' ' + className : ''}`}>
       <label className="db-label">{label}</label>
       {children}
     </div>
@@ -417,7 +417,7 @@ function ClientForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
           <input className="db-input" value={f.tags} onChange={e => setF(p => ({ ...p, tags: e.target.value }))} />
         </Field>
       </div>
-      <Field label="Verticals">
+      <Field label="Verticals" className="ne-span-full">
         <div className="ne-vertical-grid">
           {crm.verticals.map(v => (
             <label key={v} className={`ne-vertical-chip${f.verticals.includes(v) ? ' is-checked' : ''}`}>
@@ -496,7 +496,7 @@ function InvoiceForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
           <input className="db-input" value={nextRef} disabled style={{ opacity: 0.5 }} />
         </Field>
       </div>
-      <Field label="Notes">
+      <Field label="Notes" className="ne-span-full">
         <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
@@ -560,7 +560,7 @@ function CampaignForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
           <input className="db-input" type="number" min="0" value={f.connected} onChange={e => setF(p => ({ ...p, connected: e.target.value }))} />
         </Field>
       </div>
-      <Field label="Notes">
+      <Field label="Notes" className="ne-span-full">
         <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
@@ -627,7 +627,7 @@ function ReturnForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => 
           <input className="db-input" value={f.callDate} onChange={e => setF(p => ({ ...p, callDate: e.target.value }))} />
         </Field>
       </div>
-      <Field label="Notes">
+      <Field label="Notes" className="ne-span-full">
         <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
@@ -702,10 +702,10 @@ function TaskForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => vo
   return (
     <form className="ne-form" onSubmit={submit}>
       {err && <p className="ne-error">{err}</p>}
-      <Field label="Title *">
+      <Field label="Title *" className="ne-span-full">
         <input className="db-input" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
       </Field>
-      <Field label="Description">
+      <Field label="Description" className="ne-span-full">
         <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
       </Field>
       <div className="db-field-row">
@@ -794,7 +794,7 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
           <input className="db-input" value={f.callerId} onChange={e => setF(p => ({ ...p, callerId: e.target.value }))} />
         </Field>
       </div>
-      <Field label="Reason / Dispute Description">
+      <Field label="Reason / Dispute Description" className="ne-span-full">
         <input className="db-input" value={f.reason} onChange={e => setF(p => ({ ...p, reason: e.target.value }))} />
       </Field>
       <div className="db-field-row">
@@ -832,7 +832,7 @@ function CallLogForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =>
           </label>
         </Field>
       </div>
-      <Field label="Notes">
+      <Field label="Notes" className="ne-span-full">
         <input className="db-input" value={f.notes} onChange={e => setF(p => ({ ...p, notes: e.target.value }))} />
       </Field>
       <div className="db-form-actions">
@@ -866,10 +866,10 @@ function IssueForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) => v
   return (
     <form className="ne-form" onSubmit={submit}>
       {err && <p className="ne-error">{err}</p>}
-      <Field label="Title *">
+      <Field label="Title *" className="ne-span-full">
         <input className="db-input" value={f.title} onChange={e => setF(p => ({ ...p, title: e.target.value }))} />
       </Field>
-      <Field label="Description">
+      <Field label="Description" className="ne-span-full">
         <textarea className="db-input" rows={3} value={f.description} onChange={e => setF(p => ({ ...p, description: e.target.value }))} style={{ resize: 'vertical' }} />
       </Field>
       <div className="db-field-row">
@@ -915,7 +915,7 @@ function ReminderForm({ crm, flash, navigate }: { crm: CRM; flash: (m: string) =
   return (
     <form className="ne-form" onSubmit={submit}>
       {err && <p className="ne-error">{err}</p>}
-      <Field label="Reminder *">
+      <Field label="Reminder *" className="ne-span-full">
         <textarea
           className="db-input"
           rows={3}

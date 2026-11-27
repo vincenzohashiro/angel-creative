@@ -54,7 +54,7 @@
 
 .ne-layout {
   display: grid;
-  grid-template-columns: minmax(300px, 440px) 1fr;
+  grid-template-columns: 3fr 2fr;
   min-height: 300px;
 }
 
@@ -173,22 +173,33 @@
   padding: 24px 0;
 }
 
-/* ── Form ─────────────────────────────────────────── */
+/* ── Form — 2-column CSS grid ─────────────────────── */
 
 .ne-form {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: start;
 }
 
-/* Dense field sizing scoped to New Entry forms only */
-.ne-form .db-field      { gap: 2px; }
-.ne-form .db-label      { font-size: 8.5px; letter-spacing: 0.09em; }
-.ne-form .db-input      { padding: 5px 8px; font-size: 12.5px; }
-.ne-form select.db-input { padding: 4px 8px; }
-.ne-form .db-field-row  { gap: 8px; }
-.ne-form .db-form-actions { padding-top: 4px; display: flex; justify-content: flex-end; }
-.ne-form .db-btn        { padding: 6px 16px; font-size: 12px; }
+/* Row wrappers become invisible to grid — children become grid items */
+.ne-form .db-field-row { display: contents; }
+
+/* Auto-span for special elements */
+.ne-form .ne-error,
+.ne-form .ne-sla-notice,
+.ne-form .db-form-actions { grid-column: 1 / -1; }
+
+/* Full-span helper */
+.ne-span-full { grid-column: 1 / -1; }
+
+/* Comfortable field sizing scoped to New Entry forms only */
+.ne-form .db-field      { gap: 4px; }
+.ne-form .db-label      { font-size: 9px; letter-spacing: 0.08em; }
+.ne-form .db-input      { padding: 8px 10px; font-size: 13px; }
+.ne-form select.db-input { padding: 7px 10px; }
+.ne-form .db-form-actions { padding-top: 2px; display: flex; justify-content: flex-end; }
+.ne-form .db-btn        { padding: 7px 18px; font-size: 12.5px; }
 
 /* ── SLA notice ───────────────────────────────────── */
 
